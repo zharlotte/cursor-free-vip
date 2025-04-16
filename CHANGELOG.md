@@ -1,5 +1,16 @@
 # Change Log
 
+## v1.10.02
+1. Remove: Remove All Auto generating fake Google email accounts and OAuth access | 移除所有自動生成假 Google 電子郵件帳戶和 OAuth 訪問
+2. Follow GitHub Terms of Service | 遵守 GitHub Terms of Service
+3. Follow Cursor Terms of Service | 遵守 Cursor Terms of Service
+4. All are for educational purposes, currently the repo does not violate any laws | 全都是教育用途，目前 repo 沒有違反任何法律
+5. This project adopts CC BY-NC-ND 4.0 , do not use for commercial purposes | 本專案採用 CC BY-NC-ND 4.0，拒絕任何商業用途
+6. Use & Cherish | 切用且珍惜
+7. Same as v1.10.01 | 與 v1.10.01 相同 
+8. Fix: reset machine ID no module name 'new_signup' | 修復機器 ID 重置 no module name 'new_signup'
+9. Fix: Some Issues | 修復一些問題
+
 ## v1.10.01
 1. Remove: Remove All Auto generating fake Google email accounts and OAuth access | 移除所有自動生成假 Google 電子郵件帳戶和 OAuth 訪問
 2. Follow GitHub Terms of Service | 遵守 GitHub Terms of Service
