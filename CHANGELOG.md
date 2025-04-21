@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.10.04
+1. Hotfix: Reset Process Error: cannot access local variable 'main_path' where it is not associated with a value on windows & macos | 修復在 Windows 和 macOS 上無法訪問局部變量 'main_path' 的問題
+2. Fix: Some Issues | 修復一些問題
+
 ## v1.10.03
 1. Add: Manual Registration | 增加手動註冊
 2. Only support your own Email | 只支持自己的Email 請勿使用Temp Email 註冊 註冊假賬號.
