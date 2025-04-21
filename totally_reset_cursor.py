@@ -243,6 +243,9 @@ def get_workbench_cursor_path(translator=None) -> str:
         if config.has_section('LinuxPaths') and config.has_option('LinuxPaths', 'cursor_path'):
             base_path = config.get('LinuxPaths', 'cursor_path')
     
+    # Get the main path for non-Linux systems or if Linux path wasn't found in the loop
+    main_path = os.path.join(base_path, paths_map[system]["main"])
+    
     if not os.path.exists(main_path):
         raise OSError(translator.get('reset.file_not_found', path=main_path) if translator else f"未找到 Cursor main.js 文件: {main_path}")
         
