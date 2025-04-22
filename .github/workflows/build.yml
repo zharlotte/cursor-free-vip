@@ -195,13 +195,24 @@ jobs:
     
     - name: Build in ARM64 Docker container
       run: |
-        docker run --rm --platform linux/arm64 -v ${{ github.workspace }}:/app -w /app arm64v8/python:3.10-slim bash -c "
+        docker run --rm --platform linux/arm64 -v ${{ github.workspace }}:/app -w /app -e VERSION=${{ env.VERSION }} arm64v8/python:3.10-slim bash -c "
           apt-get update && apt-get install -y build-essential
           pip install --upgrade pip
           pip install pyinstaller
           pip install -r requirements.txt
           python -m PyInstaller build.spec
-          mv /app/dist/CursorFreeVIP_${{ env.VERSION }}_linux /app/dist/CursorFreeVIP_${{ env.VERSION }}_linux_arm64
+          # 检查生成的文件名
+          ls -la /app/dist/
+          # 使用正确的文件名进行移动
+          if [ -f \"/app/dist/CursorFreeVIP_\${VERSION}_linux\" ]; then
+            mv \"/app/dist/CursorFreeVIP_\${VERSION}_linux\" \"/app/dist/CursorFreeVIP_\${VERSION}_linux_arm64\"
+          elif [ -f \"/app/dist/CursorFreeVIP_linux\" ]; then
+            mv \"/app/dist/CursorFreeVIP_linux\" \"/app/dist/CursorFreeVIP_\${VERSION}_linux_arm64\"
+          else
+            echo \"Error: Cannot find expected output file in dist directory\"
+            ls -la /app/dist/
+            exit 1
+          fi
         "
         echo "Contents of dist directory:"
         ls -la dist/
