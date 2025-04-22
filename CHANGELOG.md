@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.10.05
+1. Remove block_domain.txt | 移除 block_domain.txt
+2. Original Code In Github , If u afraid of virus, please clone the code and run locally | 原始碼在 Github 上，如果怕病毒，請複製原始碼並在本機運行
+3. Fix: Some Issues | 修復一些問題
+
+
 ## v1.10.04
 1. Hotfix: Reset Process Error: cannot access local variable 'main_path' where it is not associated with a value on windows & macos | 修復在 Windows 和 macOS 上無法訪問局部變量 'main_path' 的問題
 2. Fix: Some Issues | 修復一些問題
