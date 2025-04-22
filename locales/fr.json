@@ -31,6 +31,7 @@
         "check_user_authorized": "Vérifier l'Autorisation de l'Utilisateur"
     },
     "languages": {
+        "ar": "Arabe",
         "en": "Anglais",
         "zh_cn": "Chinois simplifié",
         "zh_tw": "Chinois traditionnel",

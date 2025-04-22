@@ -35,6 +35,7 @@
         "bypass_token_limit": "Bypass Token Limit"
     },
     "languages": {
+        "ar": "Arabic",
         "en": "English",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",
