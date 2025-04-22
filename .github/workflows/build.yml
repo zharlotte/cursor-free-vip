@@ -141,7 +141,7 @@ jobs:
         path: dist/CursorFreeVIP_${{ env.VERSION }}_mac_arm64
 
   build-linux-x64:
-    needs: [create-tag , determine-version]
+    needs: [determine-version, create-tag]
     runs-on: ubuntu-22.04
     
     steps:
@@ -178,7 +178,7 @@ jobs:
         path: dist/CursorFreeVIP_${{ env.VERSION }}_linux_x64
 
   build-linux-arm64:
-    needs: [create-tag , determine-version]
+    needs: [determine-version, create-tag]
     runs-on: ubuntu-latest
     
     steps:
@@ -213,7 +213,7 @@ jobs:
         path: dist/CursorFreeVIP_${{ env.VERSION }}_linux_arm64
 
   build-macos-intel:
-    needs: [create-tag , determine-version]
+    needs: [determine-version, create-tag]
     runs-on: macos-latest
 
     steps:
