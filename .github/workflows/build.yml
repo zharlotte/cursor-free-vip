@@ -31,23 +31,23 @@ jobs:
         run: |
           VERSION=$(grep "^version=" .env | cut -d'=' -f2)
           echo "ENV_VERSION=$VERSION" >> $GITHUB_ENV
-          echo "::set-output name=version::$VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Using version from .env file: $VERSION"
       
       - name: Use manual version
         id: manual-version
         if: ${{ github.event.inputs.use_env_version != 'yes' }}
         run: |
-          echo "::set-output name=version::${{ github.event.inputs.version }}"
+          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
           echo "Using manually entered version: ${{ github.event.inputs.version }}"
       
       - name: Set final version
         id: set-version
         run: |
           if [ "${{ github.event.inputs.use_env_version }}" == "yes" ]; then
-            echo "::set-output name=version::${{ env.ENV_VERSION }}"
+            echo "version=${{ env.ENV_VERSION }}" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=version::${{ github.event.inputs.version }}"
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
           fi
 
   create-tag:
@@ -107,9 +107,16 @@ jobs:
         echo "Version: ${{ env.VERSION }}" >> "dist/CursorFreeVIP_${{ env.VERSION }}_windows.exe.manifest"
         echo "Description: Cursor Free VIP Tool" >> "dist/CursorFreeVIP_${{ env.VERSION }}_windows.exe.manifest"
     
-    - name: Install SignTool
+    - name: Install Windows SDK
       run: |
-        choco install windows-sdk-10-version-2004-all -y
+        # 使用更新的包名
+        choco install windows-sdk-10 -y || echo "Windows SDK installation skipped, continuing build..."
+    
+    - name: Download SignTool (fallback)
+      if: ${{ failure() }}
+      run: |
+        mkdir -p tools
+        Invoke-WebRequest -Uri "https://download.microsoft.com/download/1/5/6/156F6D1A-8A5F-4B9E-839A-BF3C5D8A8861/signtool.exe" -OutFile "tools/signtool.exe" || echo "SignTool download failed, signing will be skipped"
     
     - name: Create self-signed certificate
       if: false  # Disabled until we have a proper certificate
