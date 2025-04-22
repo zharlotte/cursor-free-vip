@@ -3,7 +3,8 @@
 ## v1.10.05
 1. Remove block_domain.txt | 移除 block_domain.txt
 2. Original Code In Github , If u afraid of virus, please clone the code and run locally | 原始碼在 Github 上，如果怕病毒，請複製原始碼並在本機運行
-3. Fix: Some Issues | 修復一些問題
+3. All Action using github workflow , not build myself , so i cant place virus in the file | 所有 Action 使用 github workflow ，不是我自己 build 的，所以我不會在文件中放置病毒
+4. Fix: Some Issues | 修復一些問題
 
 
 ## v1.10.04
