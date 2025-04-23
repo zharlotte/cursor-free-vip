@@ -34,6 +34,7 @@
         "check_user_authorized": "Benutzerautorisierung Prüfen"
     },
     "languages": {
+        "ar": "Arabisch",
         "en": "Englisch",
         "zh_cn": "Vereinfachtes Chinesisch",
         "zh_tw": "Traditionelles Chinesisch",

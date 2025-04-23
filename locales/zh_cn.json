@@ -37,6 +37,7 @@
         "lang_invalid_choice": "选择无效。请输入以下选项之一：({lang_choices})"
     },
     "languages": {
+        "ar": "阿拉伯语",
         "en": "英语",
         "zh_cn": "简体中文",
         "zh_tw": "繁体中文",
