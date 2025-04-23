@@ -14,6 +14,14 @@ import shutil
 import re
 from utils import get_user_documents_path  
 
+# Add these imports for Arabic support
+try:
+    import arabic_reshaper
+    from bidi.algorithm import get_display
+except ImportError:
+    arabic_reshaper = None
+    get_display = None
+
 # Only import windll on Windows systems
 if platform.system() == 'Windows':
     import ctypes
@@ -156,6 +164,8 @@ class Translator:
                     return 'tr'      # Turkish
                 case 0x0402:
                     return 'bg'      # Bulgarian
+                case 0x0401:
+                    return 'ar'      # Arabic
                 case _:
                     return 'en'       # Default to English
         except:
@@ -196,6 +206,8 @@ class Translator:
                     return 'tr'
                 case s if s.startswith('bg'):
                     return 'bg'
+                case s if s.startswith('ar'):
+                    return 'ar'
                 case _:
                     # Try to get language from LANG environment variable as fallback
                     env_lang = os.getenv('LANG', '').lower()
@@ -220,126 +232,66 @@ class Translator:
                             return 'tr'
                         case s if 'bg' in s:
                             return 'bg'
+                        case s if 'ar' in s:
+                            return 'ar'
                         case _:
                             return 'en'
         except:
             return 'en'
     
     def download_language_file(self, lang_code):
-        """Download language file from GitHub and save to cache"""
-        try:
-            if not self.language_cache_dir:
-                print(f"{Fore.RED}{EMOJI['ERROR']} Language cache directory not configured{Style.RESET_ALL}")
-                return False
-                
-            # Create the cache directory if it doesn't exist
-            os.makedirs(self.language_cache_dir, exist_ok=True)
+        """Method kept for compatibility but now returns False as language files are integrated"""
+        print(f"{Fore.YELLOW}{EMOJI['INFO']} Languages are now integrated into the package, no need to download.{Style.RESET_ALL}")
+        return False
             
-            # GitHub raw content URL for language file
-            github_url = f"https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/locales/{lang_code}.json"
-            
-            print(f"{Fore.CYAN}{EMOJI['INFO']} Downloading language file: {lang_code}.json...{Style.RESET_ALL}")
-            
-            # Set up proper headers for GitHub API
-            headers = {
-                'Accept': 'application/vnd.github.v3.raw',
-                'User-Agent': 'Cursor-Free-VIP-App'
-            }
-            
-            # Request the file with timeout
-            response = requests.get(github_url, headers=headers, timeout=10)
-            
-            # Check if successful
-            if response.status_code == 200:
-                # Save the content to the cache file
-                cache_file_path = os.path.join(self.language_cache_dir, f"{lang_code}.json")
-                with open(cache_file_path, 'wb') as f:
-                    f.write(response.content)
-                
-                # Load the data into translations dictionary
-                try:
-                    self.translations[lang_code] = json.loads(response.content)
-                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Successfully downloaded and loaded: {lang_code}.json{Style.RESET_ALL}")
-                    return True
-                except json.JSONDecodeError:
-                    print(f"{Fore.RED}{EMOJI['ERROR']} Downloaded file is not valid JSON: {lang_code}.json{Style.RESET_ALL}")
-                    return False
-            else:
-                print(f"{Fore.RED}{EMOJI['ERROR']} Failed to download language file: {lang_code}.json (Status code: {response.status_code}){Style.RESET_ALL}")
-                return False
-                
-        except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} Error downloading language file: {e}{Style.RESET_ALL}")
-            return False
-    
     def load_translations(self):
-        """Load all available translations with GitHub fallback"""
+        """Load all available translations from the integrated package"""
         try:
             # Collection of languages we've successfully loaded
             loaded_languages = set()
             
-            # First try to load from local directory
-            locales_dir = os.path.join(os.path.dirname(__file__), 'locales')
+            locales_paths = []
+            
+            # Check for PyInstaller bundle first
             if hasattr(sys, '_MEIPASS'):
-                locales_dir = os.path.join(sys._MEIPASS, 'locales')
+                locales_paths.append(os.path.join(sys._MEIPASS, 'locales'))
             
-            # Check if local directory exists
-            if os.path.exists(locales_dir):
-                for file in os.listdir(locales_dir):
-                    if file.endswith('.json'):
-                        lang_code = file[:-5]  # Remove .json
-                        try:
-                            with open(os.path.join(locales_dir, file), 'r', encoding='utf-8') as f:
-                                self.translations[lang_code] = json.load(f)
-                                loaded_languages.add(lang_code)
-                        except (json.JSONDecodeError, UnicodeDecodeError) as e:
-                            print(f"{Fore.RED}{EMOJI['ERROR']} Error loading {file}: {e}{Style.RESET_ALL}")
-                            continue
-            else:
-                print(f"{Fore.YELLOW}{EMOJI['WARNING']} Locales directory not found, checking cache and GitHub...{Style.RESET_ALL}")
-                
-            # Next, check for cached files
-            if self.language_cache_dir and os.path.exists(self.language_cache_dir):
-                for file in os.listdir(self.language_cache_dir):
-                    if file.endswith('.json'):
-                        lang_code = file[:-5]  # Remove .json
-                        
-                        # Skip if we already loaded this language
-                        if lang_code in loaded_languages:
-                            continue
-                            
-                        try:
-                            with open(os.path.join(self.language_cache_dir, file), 'r', encoding='utf-8') as f:
-                                self.translations[lang_code] = json.load(f)
-                                loaded_languages.add(lang_code)
-                        except (json.JSONDecodeError, UnicodeDecodeError) as e:
-                            print(f"{Fore.RED}{EMOJI['ERROR']} Error loading cached {file}: {e}{Style.RESET_ALL}")
-                            continue
-                            
-            # Finally, if we're missing essential languages, try to download them
-            if self.config and self.config.has_section('Language') and self.config.getboolean('Language', 'auto_update_languages', fallback=True):
-                essential_languages = ['en', 'zh_cn', 'zh_tw', 'vi']
-                
-                # Add current language and fallback language to essential list if they're not already in
-                if self.current_language and self.current_language not in essential_languages:
-                    essential_languages.append(self.current_language)
-                if self.fallback_language and self.fallback_language not in essential_languages:
-                    essential_languages.append(self.fallback_language)
-                
-                for lang_code in essential_languages:
-                    if lang_code not in loaded_languages:
-                        print(f"{Fore.YELLOW}{EMOJI['INFO']} Missing essential language: {lang_code}, attempting to download...{Style.RESET_ALL}")
-                        self.download_language_file(lang_code)
+            # Check script directory next
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            locales_paths.append(os.path.join(script_dir, 'locales'))
             
-            # If we have no translations at all, it's a critical error
-            if not self.translations:
-                print(f"{Fore.RED}{EMOJI['ERROR']} Failed to load any translations! The application may not function correctly.{Style.RESET_ALL}")
-                
+            # Also check current working directory
+            locales_paths.append(os.path.join(os.getcwd(), 'locales'))
+            
+            for locales_dir in locales_paths:
+                if os.path.exists(locales_dir) and os.path.isdir(locales_dir):
+                    for file in os.listdir(locales_dir):
+                        if file.endswith('.json'):
+                            lang_code = file[:-5]  # Remove .json
+                            try:
+                                with open(os.path.join(locales_dir, file), 'r', encoding='utf-8') as f:
+                                    self.translations[lang_code] = json.load(f)
+                                    loaded_languages.add(lang_code)
+                                    loaded_any = True
+                            except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                                print(f"{Fore.RED}{EMOJI['ERROR']} Error loading {file}: {e}{Style.RESET_ALL}")
+                                continue
+
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} Failed to load translations: {e}{Style.RESET_ALL}")
             # Create at least minimal English translations for basic functionality
             self.translations['en'] = {"menu": {"title": "Menu", "exit": "Exit", "invalid_choice": "Invalid choice"}}
     
+    def fix_arabic(self, text):
+        if self.current_language == 'ar' and arabic_reshaper and get_display:
+            try:
+                reshaped_text = arabic_reshaper.reshape(text)
+                bidi_text = get_display(reshaped_text)
+                return bidi_text
+            except Exception:
+                return text
+        return text
+
     def get(self, key, **kwargs):
         """Get translated text with fallback support"""
         try:
@@ -348,7 +300,8 @@ class Translator:
             if result == key and self.current_language != self.fallback_language:
                 # Try fallback language if translation not found
                 result = self._get_translation(self.fallback_language, key)
-            return result.format(**kwargs) if kwargs else result
+            formatted = result.format(**kwargs) if kwargs else result
+            return self.fix_arabic(formatted)
         except Exception:
             return key
     
@@ -374,48 +327,9 @@ class Translator:
         return False
 
     def get_available_languages(self):
-        """Get list of available languages, checking GitHub for updates if configured"""
+        """Get list of available languages"""
         # Get currently loaded languages
         available_languages = list(self.translations.keys())
-        
-        # Check if automatic language updates are enabled
-        if (self.config and self.config.has_section('Language') and 
-            self.config.getboolean('Language', 'auto_update_languages', fallback=True)):
-            
-            try:
-                # GitHub API URL to get directory listing of language files
-                github_url = "https://api.github.com/repos/yeongpin/cursor-free-vip/contents/locales"
-                
-                # Set up proper headers for GitHub API
-                headers = {
-                    'Accept': 'application/vnd.github.v3+json',
-                    'User-Agent': 'Cursor-Free-VIP-App'
-                }
-                
-                # Request the directory listing with timeout
-                response = requests.get(github_url, headers=headers, timeout=10)
-                
-                # Check if successful
-                if response.status_code == 200:
-                    github_files = response.json()
-                    
-                    # Extract language codes from JSON files in the repository
-                    github_languages = []
-                    for file_info in github_files:
-                        if file_info.get('type') == 'file' and file_info.get('name', '').endswith('.json'):
-                            lang_code = file_info.get('name')[:-5]  # Remove .json extension
-                            github_languages.append(lang_code)
-                    
-                    # Check for languages available on GitHub but not loaded locally
-                    for lang_code in github_languages:
-                        if lang_code not in available_languages:
-                            # Download the missing language file
-                            if self.download_language_file(lang_code):
-                                available_languages.append(lang_code)
-                                
-            except Exception as e:
-                # Just log the error but continue with local languages
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} Could not check for additional languages from GitHub: {e}{Style.RESET_ALL}")
         
         # Sort languages alphabetically for better display
         return sorted(available_languages)
