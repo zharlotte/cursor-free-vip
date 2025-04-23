@@ -565,7 +565,7 @@ def select_language():
                 with open(config_file, 'w', encoding='utf-8') as f:
                     config.write(f)
                 
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('menu.language_saved', language=translator.get(f'languages.{selected_language}', fallback=selected_language))}{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('menu.language_config_saved', language=translator.get(f'languages.{selected_language}', fallback=selected_language))}{Style.RESET_ALL}")
             
             return True
         else:
