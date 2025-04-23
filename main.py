@@ -374,8 +374,51 @@ class Translator:
         return False
 
     def get_available_languages(self):
-        """Get list of available languages"""
-        return list(self.translations.keys())
+        """Get list of available languages, checking GitHub for updates if configured"""
+        # Get currently loaded languages
+        available_languages = list(self.translations.keys())
+        
+        # Check if automatic language updates are enabled
+        if (self.config and self.config.has_section('Language') and 
+            self.config.getboolean('Language', 'auto_update_languages', fallback=True)):
+            
+            try:
+                # GitHub API URL to get directory listing of language files
+                github_url = "https://api.github.com/repos/yeongpin/cursor-free-vip/contents/locales"
+                
+                # Set up proper headers for GitHub API
+                headers = {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'User-Agent': 'Cursor-Free-VIP-App'
+                }
+                
+                # Request the directory listing with timeout
+                response = requests.get(github_url, headers=headers, timeout=10)
+                
+                # Check if successful
+                if response.status_code == 200:
+                    github_files = response.json()
+                    
+                    # Extract language codes from JSON files in the repository
+                    github_languages = []
+                    for file_info in github_files:
+                        if file_info.get('type') == 'file' and file_info.get('name', '').endswith('.json'):
+                            lang_code = file_info.get('name')[:-5]  # Remove .json extension
+                            github_languages.append(lang_code)
+                    
+                    # Check for languages available on GitHub but not loaded locally
+                    for lang_code in github_languages:
+                        if lang_code not in available_languages:
+                            # Download the missing language file
+                            if self.download_language_file(lang_code):
+                                available_languages.append(lang_code)
+                                
+            except Exception as e:
+                # Just log the error but continue with local languages
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} Could not check for additional languages from GitHub: {e}{Style.RESET_ALL}")
+        
+        # Sort languages alphabetically for better display
+        return sorted(available_languages)
 
 # Create translator instance
 translator = Translator()
@@ -492,14 +535,20 @@ def select_language():
     print(f"\n{Fore.CYAN}{EMOJI['LANG']} {translator.get('menu.select_language')}:{Style.RESET_ALL}")
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
     
+    # Get available languages either from local directory or GitHub
     languages = translator.get_available_languages()
+    languages_count = len(languages)
+    
+    # Display all available languages with proper indices
     for i, lang in enumerate(languages):
-        lang_name = translator.get(f"languages.{lang}")
+        lang_name = translator.get(f"languages.{lang}", fallback=lang)
         print(f"{Fore.GREEN}{i}{Style.RESET_ALL}. {lang_name}")
     
     try:
-        choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices=f'0-{len(languages)-1}')}: {Style.RESET_ALL}")
-        if choice.isdigit() and 0 <= int(choice) < len(languages):
+        # Use the actual number of languages in the prompt
+        choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices=f'0-{languages_count-1}')}: {Style.RESET_ALL}")
+        
+        if choice.isdigit() and 0 <= int(choice) < languages_count:
             selected_language = languages[int(choice)]
             translator.set_language(selected_language)
             
@@ -509,7 +558,6 @@ def select_language():
                 config.set('Language', 'current_language', selected_language)
                 
                 # Get config path from user documents
-                from utils import get_user_documents_path
                 config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
                 config_file = os.path.join(config_dir, "config.ini")
                 
@@ -517,14 +565,15 @@ def select_language():
                 with open(config_file, 'w', encoding='utf-8') as f:
                     config.write(f)
                 
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('Language config saved', language=translator.get(f'languages.{selected_language}'))}{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('menu.language_saved', language=translator.get(f'languages.{selected_language}', fallback=selected_language))}{Style.RESET_ALL}")
             
             return True
         else:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
+            # Show invalid choice message with the correct range
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.lang_invalid_choice', lang_choices=f'0-{languages_count-1}')}{Style.RESET_ALL}")
             return False
-    except (ValueError, IndexError):
-        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
+    except (ValueError, IndexError) as e:
+        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.lang_invalid_choice', lang_choices=f'0-{languages_count-1}')}{Style.RESET_ALL}")
         return False
 
 def check_latest_version():

@@ -31,7 +31,9 @@
         "operation_cancelled_by_user": "Thao tác đã bị người dùng hủy",
         "exiting": "Đang thoát ……",
         "bypass_version_check": "Bỏ qua Kiểm tra Phiên bản Cursor",
-        "check_user_authorized": "Kiểm tra Quyền Người dùng"
+        "check_user_authorized": "Kiểm tra Quyền Người dùng",
+        "language_config_saved": "Đổi ngôn ngữ thành công",
+        "lang_invalid_choice": "Lựa chọn không hợp lệ. Vui lòng nhập một số từ ({lang_choices})"
     },
     "languages": {
         "en": "Tiếng Anh",
