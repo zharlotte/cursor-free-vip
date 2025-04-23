@@ -12,6 +12,13 @@ import subprocess
 from config import get_config, force_update_config
 import shutil
 import re
+# Add these imports for Arabic support
+try:
+    import arabic_reshaper
+    from bidi.algorithm import get_display
+except ImportError:
+    arabic_reshaper = None
+    get_display = None
 
 # Only import windll on Windows systems
 if platform.system() == 'Windows':
@@ -126,6 +133,8 @@ class Translator:
                     return 'tr'      # Turkish
                 case 0x0402:
                     return 'bg'      # Bulgarian
+                case 0x0401:
+                    return 'ar'      # Arabic
                 case _:
                     return 'en'       # Default to English
         except:
@@ -166,6 +175,8 @@ class Translator:
                     return 'tr'
                 case s if s.startswith('bg'):
                     return 'bg'
+                case s if s.startswith('ar'):
+                    return 'ar'
                 case _:
                     # Try to get language from LANG environment variable as fallback
                     env_lang = os.getenv('LANG', '').lower()
@@ -190,6 +201,8 @@ class Translator:
                             return 'tr'
                         case s if 'bg' in s:
                             return 'bg'
+                        case s if 'ar' in s:
+                            return 'ar'
                         case _:
                             return 'en'
         except:
@@ -218,6 +231,16 @@ class Translator:
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} Failed to load translations: {e}{Style.RESET_ALL}")
     
+    def fix_arabic(self, text):
+        if self.current_language == 'ar' and arabic_reshaper and get_display:
+            try:
+                reshaped_text = arabic_reshaper.reshape(text)
+                bidi_text = get_display(reshaped_text)
+                return bidi_text
+            except Exception:
+                return text
+        return text
+
     def get(self, key, **kwargs):
         """Get translated text with fallback support"""
         try:
@@ -226,7 +249,8 @@ class Translator:
             if result == key and self.current_language != self.fallback_language:
                 # Try fallback language if translation not found
                 result = self._get_translation(self.fallback_language, key)
-            return result.format(**kwargs) if kwargs else result
+            formatted = result.format(**kwargs) if kwargs else result
+            return self.fix_arabic(formatted)
         except Exception:
             return key
     

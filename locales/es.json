@@ -35,6 +35,7 @@
         "restore_machine_id": "Restaurar ID de máquina desde copia de seguridad"
     },
     "languages": {
+        "ar": "Árabe",
         "en": "Inglés",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",

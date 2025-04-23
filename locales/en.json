@@ -36,6 +36,7 @@
         "restore_machine_id": "Restore Machine ID from Backup"
     },
     "languages": {
+        "ar": "Arabic",
         "en": "English",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",

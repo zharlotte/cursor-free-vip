@@ -36,6 +36,7 @@
         "restore_machine_id": "從備份恢復機器ID"
     },
     "languages": {
+        "ar": "阿拉伯語",
         "en": "英文",
         "zh_cn": "簡體中文",
         "zh_tw": "繁體中文",

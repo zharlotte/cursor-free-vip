@@ -33,6 +33,7 @@
         "restore_machine_id": "Restaurer l'ID de machine depuis une sauvegarde"
     },
     "languages": {
+        "ar": "Arabe",
         "en": "Anglais",
         "zh_cn": "Chinois simplifié",
         "zh_tw": "Chinois traditionnel",
