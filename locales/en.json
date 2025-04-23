@@ -37,6 +37,7 @@
         "lang_invalid_choice": "Invalid choice. Please enter one of the following options: ({lang_choices})"
     },
     "languages": {
+        "ar": "Arabic",
         "en": "English",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",

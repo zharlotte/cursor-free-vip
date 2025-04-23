@@ -36,6 +36,7 @@
         "lang_invalid_choice": "Lựa chọn không hợp lệ. Vui lòng nhập một số từ ({lang_choices})"
     },
     "languages": {
+        "ar": "Tiếng Ả Rập",
         "en": "Tiếng Anh",
         "zh_cn": "Tiếng Trung Giản Thể",
         "zh_tw": "Tiếng Trung Phồn Thể",
