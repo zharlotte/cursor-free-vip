@@ -12,6 +12,7 @@ import subprocess
 from config import get_config, force_update_config
 import shutil
 import re
+from utils import get_user_documents_path  
 
 # Only import windll on Windows systems
 if platform.system() == 'Windows':
@@ -79,8 +80,37 @@ def run_as_admin():
 class Translator:
     def __init__(self):
         self.translations = {}
-        self.current_language = self.detect_system_language()  # Use correct method name
-        self.fallback_language = 'en'  # Fallback language if translation is missing
+        self.config = get_config()
+        
+        # Create language cache directory if it doesn't exist
+        if self.config and self.config.has_section('Language'):
+            self.language_cache_dir = self.config.get('Language', 'language_cache_dir')
+            os.makedirs(self.language_cache_dir, exist_ok=True)
+        else:
+            self.language_cache_dir = None
+        
+        # Set fallback language from config if available
+        self.fallback_language = 'en'
+        if self.config and self.config.has_section('Language') and self.config.has_option('Language', 'fallback_language'):
+            self.fallback_language = self.config.get('Language', 'fallback_language')
+        
+        # Load saved language from config if available, otherwise detect system language
+        if self.config and self.config.has_section('Language') and self.config.has_option('Language', 'current_language'):
+            saved_language = self.config.get('Language', 'current_language')
+            if saved_language and saved_language.strip():
+                self.current_language = saved_language
+            else:
+                self.current_language = self.detect_system_language()
+                # Save detected language to config
+                if self.config.has_section('Language'):
+                    self.config.set('Language', 'current_language', self.current_language)
+                    config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
+                    config_file = os.path.join(config_dir, "config.ini")
+                    with open(config_file, 'w', encoding='utf-8') as f:
+                        self.config.write(f)
+        else:
+            self.current_language = self.detect_system_language()
+        
         self.load_translations()
     
     def detect_system_language(self):
@@ -195,28 +225,120 @@ class Translator:
         except:
             return 'en'
     
-    def load_translations(self):
-        """Load all available translations"""
+    def download_language_file(self, lang_code):
+        """Download language file from GitHub and save to cache"""
         try:
+            if not self.language_cache_dir:
+                print(f"{Fore.RED}{EMOJI['ERROR']} Language cache directory not configured{Style.RESET_ALL}")
+                return False
+                
+            # Create the cache directory if it doesn't exist
+            os.makedirs(self.language_cache_dir, exist_ok=True)
+            
+            # GitHub raw content URL for language file
+            github_url = f"https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/locales/{lang_code}.json"
+            
+            print(f"{Fore.CYAN}{EMOJI['INFO']} Downloading language file: {lang_code}.json...{Style.RESET_ALL}")
+            
+            # Set up proper headers for GitHub API
+            headers = {
+                'Accept': 'application/vnd.github.v3.raw',
+                'User-Agent': 'Cursor-Free-VIP-App'
+            }
+            
+            # Request the file with timeout
+            response = requests.get(github_url, headers=headers, timeout=10)
+            
+            # Check if successful
+            if response.status_code == 200:
+                # Save the content to the cache file
+                cache_file_path = os.path.join(self.language_cache_dir, f"{lang_code}.json")
+                with open(cache_file_path, 'wb') as f:
+                    f.write(response.content)
+                
+                # Load the data into translations dictionary
+                try:
+                    self.translations[lang_code] = json.loads(response.content)
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Successfully downloaded and loaded: {lang_code}.json{Style.RESET_ALL}")
+                    return True
+                except json.JSONDecodeError:
+                    print(f"{Fore.RED}{EMOJI['ERROR']} Downloaded file is not valid JSON: {lang_code}.json{Style.RESET_ALL}")
+                    return False
+            else:
+                print(f"{Fore.RED}{EMOJI['ERROR']} Failed to download language file: {lang_code}.json (Status code: {response.status_code}){Style.RESET_ALL}")
+                return False
+                
+        except Exception as e:
+            print(f"{Fore.RED}{EMOJI['ERROR']} Error downloading language file: {e}{Style.RESET_ALL}")
+            return False
+    
+    def load_translations(self):
+        """Load all available translations with GitHub fallback"""
+        try:
+            # Collection of languages we've successfully loaded
+            loaded_languages = set()
+            
+            # First try to load from local directory
             locales_dir = os.path.join(os.path.dirname(__file__), 'locales')
             if hasattr(sys, '_MEIPASS'):
                 locales_dir = os.path.join(sys._MEIPASS, 'locales')
             
-            if not os.path.exists(locales_dir):
-                print(f"{Fore.RED}{EMOJI['ERROR']} Locales directory not found{Style.RESET_ALL}")
-                return
-
-            for file in os.listdir(locales_dir):
-                if file.endswith('.json'):
-                    lang_code = file[:-5]  # Remove .json
-                    try:
-                        with open(os.path.join(locales_dir, file), 'r', encoding='utf-8') as f:
-                            self.translations[lang_code] = json.load(f)
-                    except (json.JSONDecodeError, UnicodeDecodeError) as e:
-                        print(f"{Fore.RED}{EMOJI['ERROR']} Error loading {file}: {e}{Style.RESET_ALL}")
-                        continue
+            # Check if local directory exists
+            if os.path.exists(locales_dir):
+                for file in os.listdir(locales_dir):
+                    if file.endswith('.json'):
+                        lang_code = file[:-5]  # Remove .json
+                        try:
+                            with open(os.path.join(locales_dir, file), 'r', encoding='utf-8') as f:
+                                self.translations[lang_code] = json.load(f)
+                                loaded_languages.add(lang_code)
+                        except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                            print(f"{Fore.RED}{EMOJI['ERROR']} Error loading {file}: {e}{Style.RESET_ALL}")
+                            continue
+            else:
+                print(f"{Fore.YELLOW}{EMOJI['WARNING']} Locales directory not found, checking cache and GitHub...{Style.RESET_ALL}")
+                
+            # Next, check for cached files
+            if self.language_cache_dir and os.path.exists(self.language_cache_dir):
+                for file in os.listdir(self.language_cache_dir):
+                    if file.endswith('.json'):
+                        lang_code = file[:-5]  # Remove .json
+                        
+                        # Skip if we already loaded this language
+                        if lang_code in loaded_languages:
+                            continue
+                            
+                        try:
+                            with open(os.path.join(self.language_cache_dir, file), 'r', encoding='utf-8') as f:
+                                self.translations[lang_code] = json.load(f)
+                                loaded_languages.add(lang_code)
+                        except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                            print(f"{Fore.RED}{EMOJI['ERROR']} Error loading cached {file}: {e}{Style.RESET_ALL}")
+                            continue
+                            
+            # Finally, if we're missing essential languages, try to download them
+            if self.config and self.config.has_section('Language') and self.config.getboolean('Language', 'auto_update_languages', fallback=True):
+                essential_languages = ['en', 'zh_cn', 'zh_tw', 'vi']
+                
+                # Add current language and fallback language to essential list if they're not already in
+                if self.current_language and self.current_language not in essential_languages:
+                    essential_languages.append(self.current_language)
+                if self.fallback_language and self.fallback_language not in essential_languages:
+                    essential_languages.append(self.fallback_language)
+                
+                for lang_code in essential_languages:
+                    if lang_code not in loaded_languages:
+                        print(f"{Fore.YELLOW}{EMOJI['INFO']} Missing essential language: {lang_code}, attempting to download...{Style.RESET_ALL}")
+                        self.download_language_file(lang_code)
+            
+            # If we have no translations at all, it's a critical error
+            if not self.translations:
+                print(f"{Fore.RED}{EMOJI['ERROR']} Failed to load any translations! The application may not function correctly.{Style.RESET_ALL}")
+                
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} Failed to load translations: {e}{Style.RESET_ALL}")
+            # Create at least minimal English translations for basic functionality
+            self.translations['en'] = {"menu": {"title": "Menu", "exit": "Exit", "invalid_choice": "Invalid choice"}}
     
     def get(self, key, **kwargs):
         """Get translated text with fallback support"""
@@ -378,7 +500,25 @@ def select_language():
     try:
         choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices=f'0-{len(languages)-1}')}: {Style.RESET_ALL}")
         if choice.isdigit() and 0 <= int(choice) < len(languages):
-            translator.set_language(languages[int(choice)])
+            selected_language = languages[int(choice)]
+            translator.set_language(selected_language)
+            
+            # Save selected language to config
+            config = get_config()
+            if config and config.has_section('Language'):
+                config.set('Language', 'current_language', selected_language)
+                
+                # Get config path from user documents
+                from utils import get_user_documents_path
+                config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
+                config_file = os.path.join(config_dir, "config.ini")
+                
+                # Write updated config
+                with open(config_file, 'w', encoding='utf-8') as f:
+                    config.write(f)
+                
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('Language config saved', language=translator.get(f'languages.{selected_language}'))}{Style.RESET_ALL}")
+            
             return True
         else:
             print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
