@@ -293,7 +293,8 @@ def print_menu():
         8: f"{Fore.GREEN}8{Style.RESET_ALL}. {EMOJI['SETTINGS']}  {translator.get('menu.config')}",
         9: f"{Fore.GREEN}9{Style.RESET_ALL}. {EMOJI['UPDATE']}  {translator.get('menu.bypass_version_check', fallback='Bypass Cursor Version Check')}",
         10: f"{Fore.GREEN}10{Style.RESET_ALL}. {EMOJI['UPDATE']}  {translator.get('menu.check_user_authorized', fallback='Check User Authorized')}",
-        11: f"{Fore.GREEN}11{Style.RESET_ALL}. {EMOJI['UPDATE']}  {translator.get('menu.bypass_token_limit', fallback='Bypass Token Limit')}"
+        11: f"{Fore.GREEN}11{Style.RESET_ALL}. {EMOJI['UPDATE']}  {translator.get('menu.bypass_token_limit', fallback='Bypass Token Limit')}",
+        12: f"{Fore.GREEN}12{Style.RESET_ALL}. {EMOJI['BACKUP']}  {translator.get('menu.restore_machine_id', fallback='Restore Machine ID from Backup')}"
     }
     
     # Automatically calculate the number of menu items in the left and right columns
@@ -566,7 +567,7 @@ def main():
     
     while True:
         try:
-            choice_num = 11
+            choice_num = 12
             choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices=f'0-{choice_num}')}: {Style.RESET_ALL}")
 
             match choice:
@@ -618,6 +619,10 @@ def main():
                 case "11":
                     import bypass_token_limit
                     bypass_token_limit.run(translator)
+                    print_menu()
+                case "12":
+                    import restore_machine_id
+                    restore_machine_id.run(translator)
                     print_menu()
                 case _:
                     print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
