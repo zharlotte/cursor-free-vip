@@ -33,6 +33,7 @@
         "select_chrome_profile": "Избери Chrome профил"
     },
     "languages": {
+        "ar": "Арабски",
         "en": "English",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",

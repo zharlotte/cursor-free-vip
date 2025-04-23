@@ -33,6 +33,7 @@
         "check_user_authorized": "Verificar Usuario Autorizado"
     },
     "languages": {
+        "ar": "Árabe",
         "en": "Inglés",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",
