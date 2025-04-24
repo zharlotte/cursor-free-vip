@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.11.02
+1. Add: Japanese and Italian language support
+2. Refactor: Account Generation with Faker and Update requirements.txt
+3. Fix: Some Issues | 修復一些問題
+
 ## v1.11.01
 0. Must Update to this version to get full experience | 必須更新到此版本以獲取完整體驗
 1. Restore: Some Main Code | 恢復一些主程式碼
