@@ -34,7 +34,8 @@
         "check_user_authorized": "Check User Authorized",
         "bypass_token_limit": "Bypass Token Limit",
         "language_config_saved": "Language configuration saved successfully",
-        "lang_invalid_choice": "Invalid choice. Please enter one of the following options: ({lang_choices})"
+        "lang_invalid_choice": "Invalid choice. Please enter one of the following options: ({lang_choices})",
+        "restore_machine_id": "Restore Machine ID from Backup"
     },
     "languages": {
         "ar": "Arabic",
