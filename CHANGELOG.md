@@ -1,6 +1,7 @@
 # Change Log
 
 ## v1.11.01
+0. Must Update to this version to get full experience | 必須更新到此版本以獲取完整體驗
 1. Restore: Some Main Code | 恢復一些主程式碼
 2. Add: Arabic language | 增加阿拉伯語
 3. Add: Language configuration saved setting | 增加語言配置保存設定
