@@ -33,7 +33,9 @@
         "bypass_version_check": "Bỏ qua Kiểm tra Phiên bản Cursor",
         "check_user_authorized": "Kiểm tra Quyền Người dùng",
         "bypass_token_limit": "Bỏ qua giới hạn Token",
-        "restore_machine_id": "Khôi phục ID máy từ bản sao lưu"
+        "restore_machine_id": "Khôi phục ID máy từ bản sao lưu",
+        "language_config_saved": "Đổi ngôn ngữ thành công",
+        "lang_invalid_choice": "Lựa chọn không hợp lệ. Vui lòng nhập một số từ ({lang_choices})"
     },
     "languages": {
         "ar": "Tiếng Ả Rập",

@@ -33,7 +33,9 @@
         "bypass_version_check": "绕过 Cursor 版本检查",
         "check_user_authorized": "检查用户授权",
         "bypass_token_limit": "绕过 Token 限制",
-        "restore_machine_id": "从备份恢复机器ID"
+        "restore_machine_id": "从备份恢复机器ID",
+        "language_config_saved": "语言配置保存成功",
+        "lang_invalid_choice": "选择无效。请输入以下选项之一：({lang_choices})"
     },
     "languages": {
         "ar": "阿拉伯语",

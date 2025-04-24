@@ -33,7 +33,9 @@
         "bypass_version_check": "Bypass Cursor Version Check",
         "check_user_authorized": "Check User Authorized",
         "bypass_token_limit": "Bypass Token Limit",
-        "restore_machine_id": "Restore Machine ID from Backup"
+        "restore_machine_id": "Restore Machine ID from Backup",
+        "language_config_saved": "Language configuration saved successfully",
+        "lang_invalid_choice": "Invalid choice. Please enter one of the following options: ({lang_choices})"
     },
     "languages": {
         "ar": "Arabic",
