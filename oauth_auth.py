@@ -74,8 +74,8 @@ class OAuthHandler:
             
             if self.translator:
                 # 动态使用浏览器类型
-                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('browser_profile.select_profile', browser=browser_type_display)}{Style.RESET_ALL}")
-                print(f"{Fore.CYAN}{self.translator.get('browser_profile.profile_list', browser=browser_type_display)}{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.select_profile', browser=browser_type_display)}{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}{self.translator.get('oauth.profile_list', browser=browser_type_display)}{Style.RESET_ALL}")
             else:
                 print(f"{Fore.CYAN}{EMOJI['INFO']} Select {browser_type_display} profile to use:{Style.RESET_ALL}")
                 print(f"Available {browser_type_display} profiles:")
@@ -125,31 +125,31 @@ class OAuthHandler:
                             self.selected_profile = selected_profile
                             
                             if self.translator:
-                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('browser_profile.profile_selected', profile=selected_profile)}{Style.RESET_ALL}")
+                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.profile_selected', profile=selected_profile)}{Style.RESET_ALL}")
                             else:
                                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Selected profile: {selected_profile}{Style.RESET_ALL}")
                             return True
                         else:
                             if self.translator:
-                                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('browser_profile.invalid_selection')}{Style.RESET_ALL}")
+                                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.invalid_selection')}{Style.RESET_ALL}")
                             else:
                                 print(f"{Fore.RED}{EMOJI['ERROR']} Invalid selection. Please try again.{Style.RESET_ALL}")
                             return self._select_profile()
                     except ValueError:
                         if self.translator:
-                            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('browser_profile.invalid_selection')}{Style.RESET_ALL}")
+                            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.invalid_selection')}{Style.RESET_ALL}")
                         else:
                             print(f"{Fore.RED}{EMOJI['ERROR']} Invalid selection. Please try again.{Style.RESET_ALL}")
                         return self._select_profile()
                 else:
                     # No Local State file, use Default profile
-                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('browser_profile.no_profiles', browser=browser_type_display) if self.translator else f'No {browser_type_display} profiles found'}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('oauth.no_profiles', browser=browser_type_display) if self.translator else f'No {browser_type_display} profiles found'}{Style.RESET_ALL}")
                     self.selected_profile = "Default"
                     return True
                     
             except Exception as e:
                 # Error loading profiles, use Default profile
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('browser_profile.error_loading', error=str(e), browser=browser_type_display) if self.translator else f'Error loading {browser_type_display} profiles: {str(e)}'}{Style.RESET_ALL}")
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.error_loading', error=str(e), browser=browser_type_display) if self.translator else f'Error loading {browser_type_display} profiles: {str(e)}'}{Style.RESET_ALL}")
                 self.selected_profile = "Default"
                 return True
             
