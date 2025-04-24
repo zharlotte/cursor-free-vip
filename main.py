@@ -12,6 +12,8 @@ import subprocess
 from config import get_config, force_update_config
 import shutil
 import re
+from utils import get_user_documents_path  
+
 # Add these imports for Arabic support
 try:
     import arabic_reshaper
@@ -86,8 +88,37 @@ def run_as_admin():
 class Translator:
     def __init__(self):
         self.translations = {}
-        self.current_language = self.detect_system_language()  # Use correct method name
-        self.fallback_language = 'en'  # Fallback language if translation is missing
+        self.config = get_config()
+        
+        # Create language cache directory if it doesn't exist
+        if self.config and self.config.has_section('Language'):
+            self.language_cache_dir = self.config.get('Language', 'language_cache_dir')
+            os.makedirs(self.language_cache_dir, exist_ok=True)
+        else:
+            self.language_cache_dir = None
+        
+        # Set fallback language from config if available
+        self.fallback_language = 'en'
+        if self.config and self.config.has_section('Language') and self.config.has_option('Language', 'fallback_language'):
+            self.fallback_language = self.config.get('Language', 'fallback_language')
+        
+        # Load saved language from config if available, otherwise detect system language
+        if self.config and self.config.has_section('Language') and self.config.has_option('Language', 'current_language'):
+            saved_language = self.config.get('Language', 'current_language')
+            if saved_language and saved_language.strip():
+                self.current_language = saved_language
+            else:
+                self.current_language = self.detect_system_language()
+                # Save detected language to config
+                if self.config.has_section('Language'):
+                    self.config.set('Language', 'current_language', self.current_language)
+                    config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
+                    config_file = os.path.join(config_dir, "config.ini")
+                    with open(config_file, 'w', encoding='utf-8') as f:
+                        self.config.write(f)
+        else:
+            self.current_language = self.detect_system_language()
+        
         self.load_translations()
     
     def detect_system_language(self):
@@ -208,28 +239,48 @@ class Translator:
         except:
             return 'en'
     
-    def load_translations(self):
-        """Load all available translations"""
-        try:
-            locales_dir = os.path.join(os.path.dirname(__file__), 'locales')
-            if hasattr(sys, '_MEIPASS'):
-                locales_dir = os.path.join(sys._MEIPASS, 'locales')
+    def download_language_file(self, lang_code):
+        """Method kept for compatibility but now returns False as language files are integrated"""
+        print(f"{Fore.YELLOW}{EMOJI['INFO']} Languages are now integrated into the package, no need to download.{Style.RESET_ALL}")
+        return False
             
-            if not os.path.exists(locales_dir):
-                print(f"{Fore.RED}{EMOJI['ERROR']} Locales directory not found{Style.RESET_ALL}")
-                return
+    def load_translations(self):
+        """Load all available translations from the integrated package"""
+        try:
+            # Collection of languages we've successfully loaded
+            loaded_languages = set()
+            
+            locales_paths = []
+            
+            # Check for PyInstaller bundle first
+            if hasattr(sys, '_MEIPASS'):
+                locales_paths.append(os.path.join(sys._MEIPASS, 'locales'))
+            
+            # Check script directory next
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            locales_paths.append(os.path.join(script_dir, 'locales'))
+            
+            # Also check current working directory
+            locales_paths.append(os.path.join(os.getcwd(), 'locales'))
+            
+            for locales_dir in locales_paths:
+                if os.path.exists(locales_dir) and os.path.isdir(locales_dir):
+                    for file in os.listdir(locales_dir):
+                        if file.endswith('.json'):
+                            lang_code = file[:-5]  # Remove .json
+                            try:
+                                with open(os.path.join(locales_dir, file), 'r', encoding='utf-8') as f:
+                                    self.translations[lang_code] = json.load(f)
+                                    loaded_languages.add(lang_code)
+                                    loaded_any = True
+                            except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                                print(f"{Fore.RED}{EMOJI['ERROR']} Error loading {file}: {e}{Style.RESET_ALL}")
+                                continue
 
-            for file in os.listdir(locales_dir):
-                if file.endswith('.json'):
-                    lang_code = file[:-5]  # Remove .json
-                    try:
-                        with open(os.path.join(locales_dir, file), 'r', encoding='utf-8') as f:
-                            self.translations[lang_code] = json.load(f)
-                    except (json.JSONDecodeError, UnicodeDecodeError) as e:
-                        print(f"{Fore.RED}{EMOJI['ERROR']} Error loading {file}: {e}{Style.RESET_ALL}")
-                        continue
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} Failed to load translations: {e}{Style.RESET_ALL}")
+            # Create at least minimal English translations for basic functionality
+            self.translations['en'] = {"menu": {"title": "Menu", "exit": "Exit", "invalid_choice": "Invalid choice"}}
     
     def fix_arabic(self, text):
         if self.current_language == 'ar' and arabic_reshaper and get_display:
@@ -277,7 +328,11 @@ class Translator:
 
     def get_available_languages(self):
         """Get list of available languages"""
-        return list(self.translations.keys())
+        # Get currently loaded languages
+        available_languages = list(self.translations.keys())
+        
+        # Sort languages alphabetically for better display
+        return sorted(available_languages)
 
 # Create translator instance
 translator = Translator()
@@ -395,21 +450,45 @@ def select_language():
     print(f"\n{Fore.CYAN}{EMOJI['LANG']} {translator.get('menu.select_language')}:{Style.RESET_ALL}")
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
     
+    # Get available languages either from local directory or GitHub
     languages = translator.get_available_languages()
+    languages_count = len(languages)
+    
+    # Display all available languages with proper indices
     for i, lang in enumerate(languages):
-        lang_name = translator.get(f"languages.{lang}")
+        lang_name = translator.get(f"languages.{lang}", fallback=lang)
         print(f"{Fore.GREEN}{i}{Style.RESET_ALL}. {lang_name}")
     
     try:
-        choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices=f'0-{len(languages)-1}')}: {Style.RESET_ALL}")
-        if choice.isdigit() and 0 <= int(choice) < len(languages):
-            translator.set_language(languages[int(choice)])
+        # Use the actual number of languages in the prompt
+        choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices=f'0-{languages_count-1}')}: {Style.RESET_ALL}")
+        
+        if choice.isdigit() and 0 <= int(choice) < languages_count:
+            selected_language = languages[int(choice)]
+            translator.set_language(selected_language)
+            
+            # Save selected language to config
+            config = get_config()
+            if config and config.has_section('Language'):
+                config.set('Language', 'current_language', selected_language)
+                
+                # Get config path from user documents
+                config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
+                config_file = os.path.join(config_dir, "config.ini")
+                
+                # Write updated config
+                with open(config_file, 'w', encoding='utf-8') as f:
+                    config.write(f)
+                
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('menu.language_config_saved', language=translator.get(f'languages.{selected_language}', fallback=selected_language))}{Style.RESET_ALL}")
+            
             return True
         else:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
+            # Show invalid choice message with the correct range
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.lang_invalid_choice', lang_choices=f'0-{languages_count-1}')}{Style.RESET_ALL}")
             return False
-    except (ValueError, IndexError):
-        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
+    except (ValueError, IndexError) as e:
+        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.lang_invalid_choice', lang_choices=f'0-{languages_count-1}')}{Style.RESET_ALL}")
         return False
 
 def check_latest_version():
