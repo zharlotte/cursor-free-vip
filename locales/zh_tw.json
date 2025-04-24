@@ -32,8 +32,10 @@
         "exiting": "退出中 ……",
         "bypass_version_check": "繞過 Cursor 版本檢查",
         "check_user_authorized": "檢查用戶授權",
-        "bypass_token_limit": "繞過 Token 限制"
-    },
+        "bypass_token_limit": "繞過 Token 限制",
+        "language_config_saved": "語言設定已成功儲存",
+        "lang_invalid_choice": "選擇無效。請輸入以下選項之一：({lang_choices})"
+        },
     "languages": {
         "ar": "阿拉伯語",
         "en": "英文",
