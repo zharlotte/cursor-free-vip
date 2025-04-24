@@ -10,3 +10,4 @@ selenium
 webdriver_manager
 arabic-reshaper
 python-bidi
+faker
