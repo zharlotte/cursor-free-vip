@@ -211,7 +211,18 @@
         "try_install_browser": "Try installing the browser with your package manager",
         "tracking_processes": "Tracking {count} {browser} processes",
         "no_new_processes_detected": "No new {browser} processes detected to track",
-        "could_not_track_processes": "Could not track {browser} processes: {error}"
+        "could_not_track_processes": "Could not track {browser} processes: {error}",
+        "using_tempmail_plus": "Using TempMailPlus for email verification",
+        "tempmail_plus_enabled": "TempMailPlus is enabled",
+        "tempmail_plus_disabled": "TempMailPlus is disabled",
+        "tempmail_plus_config_missing": "TempMailPlus configuration is missing",
+        "tempmail_plus_email_missing": "TempMailPlus email is not configured",
+        "tempmail_plus_epin_missing": "TempMailPlus epin is not configured",
+        "tempmail_plus_initialized": "TempMailPlus initialized successfully",
+        "tempmail_plus_init_failed": "Failed to initialize TempMailPlus: {error}",
+        "tempmail_plus_verification_started": "Starting TempMailPlus verification process",
+        "tempmail_plus_verification_completed": "TempMailPlus verification completed successfully",
+        "tempmail_plus_verification_failed": "TempMailPlus verification failed: {error}"
     },
     "auth": {
         "title": "Cursor Auth Manager",

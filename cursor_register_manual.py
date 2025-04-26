@@ -6,6 +6,7 @@ from faker import Faker
 from cursor_auth import CursorAuth
 from reset_machine_manual import MachineIDResetter
 from get_user_token import get_token_from_cookie
+from config import get_config
 
 os.environ["PYTHONVERBOSE"] = "0"
 os.environ["PYINSTALLER_VERBOSE"] = "0"
@@ -102,6 +103,18 @@ class CursorRegistration:
         try:
             print(f"{Fore.CYAN}{EMOJI['START']} {self.translator.get('register.register_start')}...{Style.RESET_ALL}")
             
+            # Check if tempmail_plus is enabled
+            config = get_config(self.translator)
+            email_tab = None
+            if config and config.has_section('TempMailPlus'):
+                if config.getboolean('TempMailPlus', 'enabled'):
+                    email = config.get('TempMailPlus', 'email')
+                    epin = config.get('TempMailPlus', 'epin')
+                    if email and epin:
+                        from email_tabs.tempmail_plus_tab import TempMailPlusTab
+                        email_tab = TempMailPlusTab(email, epin)
+                        print(f"{Fore.CYAN}{EMOJI['MAIL']} {self.translator.get('register.using_tempmail_plus')}{Style.RESET_ALL}")
+            
             # Use new_signup.py directly for registration
             from new_signup import main as new_signup_main
             
@@ -111,7 +124,7 @@ class CursorRegistration:
                 password=self.password,
                 first_name=self.first_name,
                 last_name=self.last_name,
-                email_tab=None,  # No email tab needed
+                email_tab=email_tab,  # Pass email_tab if tempmail_plus is enabled
                 controller=self,  # Pass self instead of self.controller
                 translator=self.translator
             )
