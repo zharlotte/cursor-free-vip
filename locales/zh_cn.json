@@ -640,7 +640,9 @@
         "found_chrome_at": "找到 Chrome: {path}",
         "found_browser_user_data_dir": "找到 {browser} 用户数据目录: {path}",
         "select_profile": "选择要使用的 {browser} 配置文件：",
-        "profile_list": "可用 {browser} 配置文件："
+        "profile_list": "可用 {browser} 配置文件：",
+        "chrome_permissions_fixed": "已修复 Chrome 用户数据目录权限",
+        "chrome_permissions_fix_failed": "修复 Chrome 权限失败: {error}"
     },
     "browser_profile": {
         "title": "浏览器配置文件选择",
