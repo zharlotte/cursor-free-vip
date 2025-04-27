@@ -211,7 +211,18 @@
         "no_new_processes_detected": "未检测到新的 {browser} 进程",
         "could_not_track_processes": "无法跟踪 {browser} 进程: {error}",
         "human_verify_error": "无法验证用户是人类，正在重试...",
-        "max_retries_reached": "已达到最大重试次数，注册失败。"
+        "max_retries_reached": "已达到最大重试次数，注册失败。",
+        "using_tempmail_plus": "使用TempMailPlus进行邮箱验证",
+        "tempmail_plus_enabled": "TempMailPlus已启用",
+        "tempmail_plus_disabled": "TempMailPlus已禁用",
+        "tempmail_plus_config_missing": "TempMailPlus配置缺失",
+        "tempmail_plus_email_missing": "未配置TempMailPlus邮箱",
+        "tempmail_plus_epin_missing": "未配置TempMailPlus epin",
+        "tempmail_plus_initialized": "TempMailPlus初始化成功",
+        "tempmail_plus_init_failed": "TempMailPlus初始化失败：{error}",
+        "tempmail_plus_verification_started": "开始TempMailPlus验证流程",
+        "tempmail_plus_verification_completed": "TempMailPlus验证成功完成",
+        "tempmail_plus_verification_failed": "TempMailPlus验证失败：{error}"
     },
     "auth": {
         "title": "Cursor 认证管理器",
