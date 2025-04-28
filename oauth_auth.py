@@ -1062,7 +1062,8 @@ def main(auth_type, translator=None):
         if auth_manager.update_auth(
             email=auth_info["email"],
             access_token=auth_info["token"],
-            refresh_token=auth_info["token"]
+            refresh_token=auth_info["token"],
+            auth_type=auth_type
         ):
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('oauth.auth_update_success') if translator else 'Auth update success'}{Style.RESET_ALL}")
             # Close the browser after successful authentication

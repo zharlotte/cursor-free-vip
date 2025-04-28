@@ -35,7 +35,8 @@
         "bypass_token_limit": "تجاوز حد الرمز المميز (Token)",
         "restore_machine_id": "استعادة معرف الجهاز من النسخ الاحتياطي",
         "lang_invalid_choice": "اختيار غير صالح. الرجاء إدخال أحد الخيارات التالية: ({lang_choices})",
-        "language_config_saved": "تم حفظ تكوين اللغة بنجاح"
+        "language_config_saved": "تم حفظ تكوين اللغة بنجاح",
+        "manual_custom_auth": "مصادقة مخصصة يدوي"
     },
     "languages": {
         "en": "الإنجليزية",
@@ -50,7 +51,9 @@
         "tr": "التركية",
         "bg": "البلغارية",
         "es": "الإسبانية",
-        "ar": "العربية"
+        "ar": "العربية",
+        "ja": "اليابانية",
+        "it": "إيطالي"
     },
     "quit_cursor": {
         "start": "بدء إغلاق Cursor",
@@ -211,7 +214,18 @@
         "try_install_browser": "حاول تثبيت المتصفح باستخدام مدير الحزم الخاص بك",
         "tracking_processes": "جارٍ تتبع {count} عمليات {browser}",
         "no_new_processes_detected": "لم يتم اكتشاف عمليات {browser} جديدة للتتبع",
-        "could_not_track_processes": "تعذر تتبع عمليات {browser}: {error}"
+        "could_not_track_processes": "تعذر تتبع عمليات {browser}: {error}",
+        "tempmail_plus_verification_completed": "تم الانتهاء من التحقق من TempMailPlus بنجاح",
+        "tempmail_plus_initialized": "تهيئة TempMailPlus بنجاح",
+        "tempmail_plus_epin_missing": "لم يتم تكوين TempMailplus Epin",
+        "using_tempmail_plus": "باستخدام TempMailPlus للتحقق من البريد الإلكتروني",
+        "tempmail_plus_disabled": "يتم تعطيل TempMailPlus",
+        "tempmail_plus_verification_failed": "فشل التحقق من TempMailPlus: {error}",
+        "tempmail_plus_email_missing": "لم يتم تكوين البريد الإلكتروني tempmailplus",
+        "tempmail_plus_enabled": "يتم تمكين TempMailPlus",
+        "tempmail_plus_verification_started": "بدء عملية التحقق من TempMailPlus",
+        "tempmail_plus_config_missing": "تكوين TempMailPlus مفقود",
+        "tempmail_plus_init_failed": "فشل تهيئة TempMailPlus: {error}"
     },
     "auth": {
         "title": "مدير مصادقة Cursor",
@@ -811,5 +825,30 @@
         "starting": "بدء عملية استعادة معرف الجهاز",
         "confirm": "هل أنت متأكد من أنك تريد استعادة هذه المعرفات؟",
         "to_cancel": "للإلغاء"
+    },
+    "manual_auth": {
+        "auth_updated_successfully": "معلومات المصادقة تحديث بنجاح!",
+        "proceed_prompt": "يتابع؟ (Y/N):",
+        "auth_type_selected": "نوع المصادقة المحدد: {type}",
+        "token_verification_skipped": "تم تخطي التحقق المميز (check_user_authorized.py غير موجود)",
+        "auth_type_google": "جوجل",
+        "token_required": "الرمز المميز مطلوب",
+        "continue_anyway": "تواصل على أي حال؟ (Y/N):",
+        "verifying_token": "التحقق من صحة الرمز المميز ...",
+        "auth_type_github": "جيثب",
+        "error": "خطأ: {error}",
+        "random_email_generated": "تم إنشاء بريد إلكتروني عشوائي: {البريد الإلكتروني}",
+        "auth_type_prompt": "حدد نوع المصادقة:",
+        "operation_cancelled": "تم إلغاء العملية",
+        "auth_type_auth0": "Auth_0 (افتراضي)",
+        "token_verification_error": "خطأ في التحقق من الرمز المميز: {error}",
+        "email_prompt": "أدخل البريد الإلكتروني (اترك فارغًا للبريد الإلكتروني العشوائي):",
+        "token_verified": "تم التحقق من الرمز المميز بنجاح!",
+        "token_prompt": "أدخل رمز المؤشر الخاص بك (Access_Token/Refresh_token):",
+        "confirm_prompt": "يرجى تأكيد المعلومات التالية:",
+        "invalid_token": "رمز غير صالح. مصادقة أجهض.",
+        "updating_database": "تحديث قاعدة بيانات مصادقة المؤشر ...",
+        "title": "مصادقة المؤشر اليدوي",
+        "auth_update_failed": "فشل في تحديث معلومات المصادقة"
     }
 }

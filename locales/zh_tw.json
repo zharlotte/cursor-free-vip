@@ -35,7 +35,8 @@
         "bypass_token_limit": "繞過 Token 限制",
         "language_config_saved": "語言配置保存成功",
         "lang_invalid_choice": "選擇無效。請輸入以下選項之一：({lang_choices})",
-        "restore_machine_id": "從備份恢復機器ID"
+        "restore_machine_id": "從備份恢復機器ID",
+        "manual_custom_auth": "手動自定義驗證"
     },
     "languages": {
         "ar": "阿拉伯語",
@@ -50,7 +51,9 @@
         "ru": "俄文",
         "tr": "土耳其文",
         "bg": "保加利亞文",
-        "es": "西班牙文"
+        "es": "西班牙文",
+        "ja": "日文",
+        "it": "義大利文"
     },
     "quit_cursor": {
         "start": "開始退出 Cursor",
@@ -841,5 +844,30 @@
         "server_error": "刷新服務器錯誤：http {status}",
         "no_access_token": "沒有訪問令牌",
         "invalid_response": "刷新服務器的JSON響應無效"
+    },
+    "manual_auth": {
+        "proceed_prompt": "繼續？ （y/n）：",
+        "token_verification_skipped": "跳過令牌驗證（Check_user_authorized.py找不到）",
+        "auth_updated_successfully": "身份驗證信息成功更新了！",
+        "auth_type_google": "Google",
+        "continue_anyway": "無論如何繼續？ （y/n）：",
+        "auth_type_selected": "選定的身份驗證類型：{type}",
+        "auth_type_github": "github",
+        "token_required": "需要令牌",
+        "random_email_generated": "生成的隨機電子郵件：{電子郵件}",
+        "verifying_token": "驗證令牌有效性...",
+        "operation_cancelled": "操作取消了",
+        "error": "錯誤：{錯誤}",
+        "auth_type_prompt": "選擇身份驗證類型：",
+        "email_prompt": "輸入電子郵件（留空白以獲取隨機電子郵件）：",
+        "auth_type_auth0": "auth_0（默認）",
+        "token_verification_error": "錯誤驗證令牌：{error}",
+        "token_verified": "令牌成功驗證了！",
+        "confirm_prompt": "請確認以下信息：",
+        "token_prompt": "輸入光標令牌（access_token/refresh_token）：",
+        "invalid_token": "無效的令牌。身份驗證中止。",
+        "title": "手動Cursor身份驗證",
+        "updating_database": "更新Cursor身份驗證數據庫...",
+        "auth_update_failed": "無法更新身份驗證信息"
     }
 }

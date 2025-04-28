@@ -36,7 +36,8 @@
         "lang_invalid_choice": "Невалиден избор. Моля, въведете една от следните опции: ({lang_choices})",
         "admin_required": "Изпълнявайки се като изпълними, администраторските привилегии са необходими.",
         "language_config_saved": "Езиковата конфигурация се запази успешно",
-        "admin_required_continue": "Продължаване без привилегии на администратор."
+        "admin_required_continue": "Продължаване без привилегии на администратор.",
+        "manual_custom_auth": "Ръчен персонализиран Auth"
     },
     "languages": {
         "ar": "Арабски",
@@ -51,7 +52,9 @@
         "ru": "Russian",
         "tr": "Turkish",
         "bg": "Bulgarian",
-        "es": "Spanish"
+        "es": "Spanish",
+        "it": "Италиански",
+        "ja": "Японски"
     },
     "quit_cursor": {
         "start": "Започни излизането от Курсор",
@@ -212,7 +215,18 @@
         "browser_path_invalid": "{браузър} Пътят е невалиден, използвайки пътя по подразбиране",
         "try_install_browser": "Опитайте да инсталирате браузъра с вашия мениджър на пакети",
         "no_new_processes_detected": "Няма нови {браузър} процеси, открити за проследяване",
-        "make_sure_browser_is_properly_installed": "Уверете се, че {браузърът} е инсталиран правилно"
+        "make_sure_browser_is_properly_installed": "Уверете се, че {браузърът} е инсталиран правилно",
+        "tempmail_plus_verification_completed": "Проверката tempmailplus приключи успешно",
+        "tempmail_plus_initialized": "TempMailplus инициализира успешно",
+        "tempmail_plus_epin_missing": "Tempmailplus epin не е конфигуриран",
+        "using_tempmail_plus": "Използване на TempMailPlus за проверка по имейл",
+        "tempmail_plus_verification_failed": "Проверката на tempmailplus не бе успешна: {грешка}",
+        "tempmail_plus_disabled": "Tempmailplus е деактивиран",
+        "tempmail_plus_email_missing": "Tempmailplus имейл не е конфигуриран",
+        "tempmail_plus_verification_started": "Стартиране на процеса на проверка на TempMailplus",
+        "tempmail_plus_enabled": "Tempmailplus е активиран",
+        "tempmail_plus_config_missing": "Липсва конфигурацията TempMailplus",
+        "tempmail_plus_init_failed": "Неуспешно инициализиране на tempmailplus: {грешка}"
     },
     "auth": {
         "title": "Управление на удостоверяването на Курсор",
@@ -824,5 +838,30 @@
         "select_profile": "Изберете {Browser} профил, който да използвате:",
         "title": "Избор на профил на браузъра",
         "default_profile": "Профил по подразбиране"
+    },
+    "manual_auth": {
+        "proceed_prompt": "Продължете? (Y/N):",
+        "auth_updated_successfully": "Информацията за удостоверяване се актуализира успешно!",
+        "token_verification_skipped": "Проверката на токена пропусна (check_user_authorized.py не е намерен)",
+        "auth_type_selected": "Избран тип удостоверяване: {type}",
+        "auth_type_google": "Google",
+        "token_required": "Необходим е жетон",
+        "continue_anyway": "Продължете така или иначе? (Y/N):",
+        "auth_type_github": "Github",
+        "verifying_token": "Проверка на валидността на жетони ...",
+        "random_email_generated": "Генериран произволен имейл: {имейл}",
+        "auth_type_prompt": "Изберете Тип удостоверяване:",
+        "error": "Грешка: {Грешка}",
+        "operation_cancelled": "Операция отменена",
+        "auth_type_auth0": "Auth_0 (по подразбиране)",
+        "token_verification_error": "Грешка в проверката на токена: {грешка}",
+        "email_prompt": "Въведете имейл (оставете празно за случаен имейл):",
+        "token_verified": "Токен успешно се проверява!",
+        "token_prompt": "Въведете вашия токен на курсора (access_token/refresh_token):",
+        "invalid_token": "Невалиден маркер. Удостоверяване абортирано.",
+        "confirm_prompt": "Моля, потвърдете следната информация:",
+        "auth_update_failed": "Неуспешно актуализиране на информацията за удостоверяване",
+        "title": "Ръчно удостоверяване на курсора",
+        "updating_database": "Актуализиране на базата данни за удостоверяване на курсора ..."
     }
 }

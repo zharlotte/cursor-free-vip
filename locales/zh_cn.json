@@ -35,7 +35,8 @@
         "bypass_token_limit": "绕过 Token 限制",
         "language_config_saved": "语言配置保存成功",
         "lang_invalid_choice": "选择无效。请输入以下选项之一：({lang_choices})",
-        "restore_machine_id": "从备份恢复机器ID"
+        "restore_machine_id": "从备份恢复机器ID",
+        "manual_custom_auth": "手动自定义验证"
     },
     "languages": {
         "ar": "阿拉伯语",
@@ -50,7 +51,9 @@
         "ru": "俄语",
         "tr": "土耳其语",
         "bg": "保加利亚语",
-        "es": "西班牙语"
+        "es": "西班牙语",
+        "it": "意大利语",
+        "ja": "日语"
     },
     "quit_cursor": {
         "start": "开始退出 Cursor",
@@ -826,5 +829,30 @@
         "success": "机器ID已成功恢复",
         "process_error": "恢复过程错误: {error}",
         "press_enter": "按Enter键继续"
+    },
+    "manual_auth": {
+        "token_verification_skipped": "跳过令牌验证（Check_user_authorized.py找不到）",
+        "auth_updated_successfully": "身份验证信息成功更新了！",
+        "auth_type_selected": "选定的身份验证类型：{type}",
+        "proceed_prompt": "继续？ （y/n）：",
+        "token_required": "需要令牌",
+        "continue_anyway": "无论如何继续？ （y/n）：",
+        "auth_type_google": "谷歌",
+        "auth_type_github": "github",
+        "random_email_generated": "生成的随机电子邮件：{电子邮件}",
+        "verifying_token": "验证令牌有效性...",
+        "auth_type_prompt": "选择身份验证类型：",
+        "operation_cancelled": "操作取消了",
+        "error": "错误：{错误}",
+        "email_prompt": "输入电子邮件（留空白以获取随机电子邮件）：",
+        "auth_type_auth0": "auth_0（默认）",
+        "token_verification_error": "错误验证令牌：{error}",
+        "token_prompt": "输入光标令牌（access_token/refresh_token）：",
+        "invalid_token": "无效的令牌。身份验证中止。",
+        "confirm_prompt": "请确认以下信息：",
+        "auth_update_failed": "无法更新身份验证信息",
+        "title": "手动Cursor身份验证",
+        "token_verified": "令牌成功验证了！",
+        "updating_database": "更新Cursor身份验证数据库..."
     }
 }

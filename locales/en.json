@@ -35,7 +35,8 @@
         "bypass_token_limit": "Bypass Token Limit",
         "language_config_saved": "Language configuration saved successfully",
         "lang_invalid_choice": "Invalid choice. Please enter one of the following options: ({lang_choices})",
-        "restore_machine_id": "Restore Machine ID from Backup"
+        "restore_machine_id": "Restore Machine ID from Backup",
+        "manual_custom_auth": "Manual Custom Auth"
     },
     "languages": {
         "ar": "Arabic",
@@ -50,7 +51,9 @@
         "ru": "Russian",
         "tr": "Turkish",
         "bg": "Bulgarian",
-        "es": "Spanish"
+        "es": "Spanish",
+        "ja": "Japanese",
+        "it": "Italian"
     },
     "quit_cursor": {
         "start": "Start Quitting Cursor",
@@ -822,5 +825,30 @@
         "success": "Machine ID restored successfully",
         "process_error": "Restore process error: {error}",
         "press_enter": "Press Enter to continue"
+    },
+    "manual_auth": {
+        "title": "Manual Cursor Authentication",
+        "token_prompt": "Enter your Cursor token (access_token/refresh_token):",
+        "token_required": "Token is required",
+        "verifying_token": "Verifying token validity...",
+        "token_verified": "Token verified successfully!",
+        "invalid_token": "Invalid token. Authentication aborted.",
+        "token_verification_skipped": "Token verification skipped (check_user_authorized.py not found)",
+        "token_verification_error": "Error verifying token: {error}",
+        "continue_anyway": "Continue anyway? (y/N): ",
+        "email_prompt": "Enter email (leave blank for random email):",
+        "random_email_generated": "Random email generated: {email}",
+        "auth_type_prompt": "Select authentication type:",
+        "auth_type_auth0": "Auth_0 (Default)",
+        "auth_type_google": "Google",
+        "auth_type_github": "GitHub",
+        "auth_type_selected": "Selected authentication type: {type}",
+        "confirm_prompt": "Please confirm the following information:",
+        "proceed_prompt": "Proceed? (y/N): ",
+        "operation_cancelled": "Operation cancelled",
+        "updating_database": "Updating Cursor authentication database...",
+        "auth_updated_successfully": "Authentication information updated successfully!",
+        "auth_update_failed": "Failed to update authentication information",
+        "error": "Error: {error}"
     }
 }

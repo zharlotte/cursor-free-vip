@@ -35,7 +35,8 @@
         "bypass_token_limit": "トークン制限をバイパス",
         "language_config_saved": "言語設定が正常に保存されました",
         "lang_invalid_choice": "無効な選択です。以下のオプションから選択してください: ({lang_choices})",
-        "restore_machine_id": "バックアップからマシンIDを復元"
+        "restore_machine_id": "バックアップからマシンIDを復元",
+        "manual_custom_auth": "手動カスタム認証"
     },
     "languages": {
         "ar": "アラビア語",
@@ -139,7 +140,18 @@
         "try_install_browser": "パッケージマネージャーと一緒にブラウザをインストールしてみてください",
         "retry_verification": "検証を再試行...",
         "update_cursor_auth_info": "カーソル認証情報を更新します",
-        "token_success": "トークンの成功を取得します"
+        "token_success": "トークンの成功を取得します",
+        "tempmail_plus_verification_completed": "tempmailplus検証は正常に完了しました",
+        "tempmail_plus_initialized": "TempMailplusは正常に初期化されました",
+        "tempmail_plus_epin_missing": "tempmailplus epinは構成されていません",
+        "using_tempmail_plus": "電子メール検証にtempmailplusを使用します",
+        "tempmail_plus_verification_failed": "tempmailplus検証が失敗しました：{エラー}",
+        "tempmail_plus_email_missing": "tempmailplus電子メールは構成されていません",
+        "tempmail_plus_disabled": "tempmailplusは無効です",
+        "tempmail_plus_verification_started": "開始tempmailplus検証プロセス",
+        "tempmail_plus_enabled": "tempmailplusが有効になっています",
+        "tempmail_plus_config_missing": "tempmailplus構成がありません",
+        "tempmail_plus_init_failed": "tempmailplusの初期化に失敗しました：{エラー}"
     },
     "config": {
         "backup_failed": "configにバックアップに失敗しました：{error}",
@@ -813,5 +825,30 @@
         "title": "バイパストークン制限ツール",
         "press_enter": "Enterを押して続行します...",
         "description": "このツールは、workbench.desktop.main.jsファイルを変更して、トークン制限をバイパスします"
+    },
+    "manual_auth": {
+        "proceed_prompt": "進む？ （y/n）：",
+        "auth_updated_successfully": "認証情報が正常に更新されました！",
+        "token_verification_skipped": "トークン検証がスキップされた（check_user_authorized.pyが見つかりません）",
+        "token_required": "トークンが必要です",
+        "auth_type_selected": "選択した認証タイプ：{タイプ}",
+        "auth_type_google": "グーグル",
+        "continue_anyway": "とにかく続行しますか？ （y/n）：",
+        "auth_type_github": "github",
+        "verifying_token": "トークンの妥当性の確認...",
+        "auth_type_prompt": "認証タイプを選択します。",
+        "error": "エラー：{エラー}",
+        "random_email_generated": "生成されたランダムメール：{email}",
+        "operation_cancelled": "操作はキャンセルされました",
+        "auth_type_auth0": "auth_0（デフォルト）",
+        "email_prompt": "電子メールを入力します（ランダム電子メールのために空白のままにしてください）：",
+        "token_verification_error": "トークンの検証エラー：{エラー}",
+        "token_prompt": "カーソルトークン（access_token/refresh_token）を入力してください：",
+        "token_verified": "トークンは正常に検証されました！",
+        "confirm_prompt": "次の情報を確認してください。",
+        "invalid_token": "無効なトークン。認証が中止されました。",
+        "title": "手動カーソル認証",
+        "updating_database": "カーソル認証データベースの更新...",
+        "auth_update_failed": "認証情報の更新に失敗しました"
     }
 }
