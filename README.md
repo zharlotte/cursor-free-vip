@@ -24,7 +24,7 @@
 </a>
 
 
-<h4>Support Latest 0.48.x Version | 支持最新 0.48.x 版本</h4>
+<h4>Support Latest 0.49.x Version | 支持最新 0.49.x 版本</h4>
 
 This tool is for educational purposes, currently the repo does not violate any laws. Please support the original project.
 This tool will not generate any fake email accounts and OAuth access.
