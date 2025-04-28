@@ -212,6 +212,17 @@
         "could_not_track_processes": "無法跟踪{瀏覽器}進程：{error}",
         "human_verify_error": "無法驗證用戶是人類。重試...",
         "tracking_processes": "跟踪{count} {瀏覽器}進程"
+        "using_tempmail_plus": "使用TempMailPlus進行郵箱驗證",
+        "tempmail_plus_enabled": "TempMailPlus已啟用",
+        "tempmail_plus_disabled": "TempMailPlus已禁用",
+        "tempmail_plus_config_missing": "TempMailPlus配置缺失",
+        "tempmail_plus_email_missing": "未配置TempMailPlus郵箱",
+        "tempmail_plus_epin_missing": "未配置TempMailPlus epin",
+        "tempmail_plus_initialized": "TempMailPlus初始化成功",
+        "tempmail_plus_init_failed": "TempMailPlus初始化失敗：{error}",
+        "tempmail_plus_verification_started": "開始TempMailPlus驗證流程",
+        "tempmail_plus_verification_completed": "TempMailPlus驗證成功完成",
+        "tempmail_plus_verification_failed": "TempMailPlus驗證失敗：{error}"
     },
     "auth": {
         "title": "Cursor 認證管理器",
