@@ -231,7 +231,8 @@
         "updating_pair": "更新键值对",
         "db_not_found": "未找到数据库文件：{path}",
         "db_permission_error": "无法访问数据库文件，请检查权限",
-        "db_connection_error": "连接数据库失败：{error}"
+        "db_connection_error": "连接数据库失败：{error}",
+        "reset_machine_id": "重置机ID"
     },
     "control": {
         "generate_email": "生成新邮箱",
@@ -262,7 +263,9 @@
         "get_cursor_session_token_success": "获取Cursor Session Token成功",
         "get_cursor_session_token_failed": "获取Cursor Session Token失败",
         "save_token_failed": "保存Token失败",
-        "no_valid_verification_code": "没有有效的验证码"
+        "no_valid_verification_code": "没有有效的验证码",
+        "database_updated_successfully": "数据库成功更新",
+        "database_connection_closed": "数据库连接关闭"
     },
     "email": {
         "starting_browser": "启动浏览器",
@@ -459,7 +462,24 @@
         "cursor_reset_completed": "Cursor AI 编辑器已完全重置且绕过试用检测！",
         "cursor_reset_failed": "Cursor AI 编辑器重置失败：{error}",
         "cursor_reset_cancelled": "Cursor AI 编辑器重置已取消，未进行任何更改。",
-        "operation_cancelled": "操作已取消，未进行任何更改。"
+        "operation_cancelled": "操作已取消，未进行任何更改。",
+        "advanced_tab_error": "错误查找高级选项卡：{错误}",
+        "already_on_settings": "已经在设置页面上",
+        "advanced_tab_retry": "找不到高级选项卡，尝试{尝试}/{max_attempts}",
+        "navigating_to_settings": "导航到设置页面...",
+        "advanced_tab_not_found": "多次尝试后找不到高级标签",
+        "login_redirect_failed": "登录重定向失败，尝试直接导航...",
+        "delete_input_error": "错误查找删除输入：{error}",
+        "delete_button_clicked": "单击删除帐户按钮",
+        "direct_advanced_navigation": "尝试直接导航到高级选项卡",
+        "delete_input_retry": "删除未找到输入，尝试{尝试}/{max_attempts}",
+        "delete_input_not_found_continuing": "找不到删除确认输入，试图继续继续",
+        "delete_button_retry": "找不到删除按钮，尝试{尝试}/{max_attempts}",
+        "advanced_tab_clicked": "单击高级选项卡",
+        "found_danger_zone": "发现的危险区域部分",
+        "delete_input_not_found": "多次尝试后找不到删除确认输入",
+        "delete_button_not_found": "多次尝试后找不到帐户按钮",
+        "delete_button_error": "错误查找删除按钮：{错误}"
     },
     "github_register": {
         "title": "GitHub + Cursor AI 注册自动化",
