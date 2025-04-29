@@ -1,5 +1,6 @@
 import requests
 import re
+import datetime
 from typing import Optional
 from .email_tab_interface import EmailTabInterface
 
@@ -39,10 +40,10 @@ class TempMailPlusTab(EmailTabInterface):
         pass
             
     def check_for_cursor_email(self) -> bool:
-        """Check if there is a verification email from Cursor
+        """Check if there is a new email within the last 3 minutes
         
         Returns:
-            bool: True if verification email exists, False otherwise
+            bool: True if new email within 3 minutes exists, False otherwise
         """
         try:
             params = {
@@ -59,13 +60,21 @@ class TempMailPlusTab(EmailTabInterface):
             
             data = response.json()
             if data.get('result') and data.get('mail_list'):
+                current_time = datetime.datetime.now()
                 for mail in data['mail_list']:
-                    if 'cursor.sh' in mail.get('from_mail', '') and mail.get('is_new') == True:
-                        self._cached_mail_id = mail.get('mail_id')  # 缓存mail_id
-                        return True
+                    if mail.get('is_new') == True:
+                        # 检查邮件时间是否在3分钟内
+                        try:
+                            mail_time = datetime.datetime.strptime(mail.get('time', ''), '%Y-%m-%d %H:%M:%S')
+                            time_diff = (current_time - mail_time).total_seconds() / 60  # 转换为分钟
+                            if time_diff <= 3:  # 3分钟内的邮件
+                                self._cached_mail_id = mail.get('mail_id')  # 缓存mail_id
+                                return True
+                        except ValueError:
+                            continue
             return False
         except Exception as e:
-            print(f"检查Cursor邮件失败: {str(e)}")
+            print(f"检查新邮件失败: {str(e)}")
             return False
             
     def get_verification_code(self) -> str:
@@ -106,4 +115,41 @@ class TempMailPlusTab(EmailTabInterface):
             return ""
         except Exception as e:
             print(f"获取验证码失败: {str(e)}")
-            return "" 
+            return ""
+
+if __name__ == "__main__":
+    import os
+    import time
+    import sys
+    
+    from config import get_config
+    
+    config = get_config()
+    
+    try:
+        email = config.get('TempMailPlus', 'email')
+        epin = config.get('TempMailPlus', 'epin')
+        
+        print(f"配置的邮箱: {email}")
+        
+        # 初始化TempMailPlusTab
+        mail_tab = TempMailPlusTab(email, epin)
+        
+        # 检查是否有Cursor的邮件
+        print("正在检查Cursor验证邮件...")
+        if mail_tab.check_for_cursor_email():
+            print("找到Cursor验证邮件")
+            
+            # 获取验证码
+            verification_code = mail_tab.get_verification_code()
+            if verification_code:
+                print(f"获取到的验证码: {verification_code}")
+            else:
+                print("未能获取到验证码")
+        else:
+            print("未找到Cursor验证邮件")
+            
+    except configparser.Error as e:
+        print(f"读取配置文件错误: {str(e)}")
+    except Exception as e:
+        print(f"发生错误: {str(e)}") 
