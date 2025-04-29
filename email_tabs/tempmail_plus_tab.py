@@ -34,16 +34,17 @@ class TempMailPlusTab(EmailTabInterface):
         }
         self.cookies = {'email': email}
         self._cached_mail_id = None  # 缓存mail_id
+        self._cached_verification_code = None  # 缓存验证码
         
     def refresh_inbox(self) -> None:
         """Refresh the email inbox"""
         pass
             
     def check_for_cursor_email(self) -> bool:
-        """Check if there is a new email
+        """Check if there is a new email and immediately retrieve verification code
         
         Returns:
-            bool: True if the first email in mail_list is new, False otherwise
+            bool: True if new email found and verification code retrieved, False otherwise
         """
         try:
             params = {
@@ -63,25 +64,27 @@ class TempMailPlusTab(EmailTabInterface):
                 # 检查邮件列表中的第一个邮件是否为新邮件
                 if data['mail_list'][0].get('is_new') == True:
                     self._cached_mail_id = data['mail_list'][0].get('mail_id')  # 缓存mail_id
-                    return True
+                    
+                    # 立即获取验证码
+                    verification_code = self._extract_verification_code()
+                    if verification_code:
+                        self._cached_verification_code = verification_code
+                        return True
             return False
         except Exception as e:
             print(f"检查新邮件失败: {str(e)}")
             return False
-            
-    def get_verification_code(self) -> str:
-        """Get the verification code from the email
+    
+    def _extract_verification_code(self) -> str:
+        """Extract verification code from email content
         
         Returns:
             str: The verification code if found, empty string otherwise
         """
         try:
-            # 如果没有缓存的mail_id，先检查是否有新邮件
             if not self._cached_mail_id:
-                if not self.check_for_cursor_email():
-                    return ""
-                    
-            # 使用缓存的mail_id获取邮件内容
+                return ""
+                
             params = {
                 'email': self.email,
                 'epin': self.epin
@@ -106,8 +109,16 @@ class TempMailPlusTab(EmailTabInterface):
                 
             return ""
         except Exception as e:
-            print(f"获取验证码失败: {str(e)}")
+            print(f"提取验证码失败: {str(e)}")
             return ""
+            
+    def get_verification_code(self) -> str:
+        """Get the verification code from cache
+        
+        Returns:
+            str: The cached verification code if available, empty string otherwise
+        """
+        return self._cached_verification_code or ""
 
 if __name__ == "__main__":
     import os
