@@ -12,8 +12,10 @@
 [![Stars](https://img.shields.io/endpoint?url=https://api.pinstudios.net/api/badges/stars/yeongpin/cursor-free-vip)](https://github.com/yeongpin/cursor-free-vip/stargazers)
 [![Downloads](https://img.shields.io/endpoint?url=https://api.pinstudios.net/api/badges/downloads/yeongpin/cursor-free-vip/total)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 <a href="https://buymeacoffee.com/yeongpin" target="_blank"><img alt="Buy Me a Coffee" src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20Me-FFDA33"></a>
+ [<img src="https://devin.ai/assets/deepwiki-badge.png" alt="Ask DeepWiki.com" height="20"/>](https://deepwiki.com/yeongpin/cursor-free-vip)
 
 </p>
+
 
 <a href="https://trendshift.io/repositories/13425" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13425" alt="yeongpin%2Fcursor-free-vip | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 <br>
@@ -22,7 +24,7 @@
 </a>
 
 
-<h4>Support Latest 0.48.x Version | 支持最新 0.48.x 版本</h4>
+<h4>Support Latest 0.49.x Version | 支持最新 0.49.x 版本</h4>
 
 This tool is for educational purposes, currently the repo does not violate any laws. Please support the original project.
 This tool will not generate any fake email accounts and OAuth access.

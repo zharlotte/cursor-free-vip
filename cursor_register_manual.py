@@ -213,7 +213,7 @@ class CursorRegistration:
         try:
             # Update authentication information first
             print(f"{Fore.CYAN}{EMOJI['KEY']} {self.translator.get('register.update_cursor_auth_info')}...{Style.RESET_ALL}")
-            if self.update_cursor_auth(email=self.email_address, access_token=token, refresh_token=token):
+            if self.update_cursor_auth(email=self.email_address, access_token=token, refresh_token=token, auth_type="Auth_0"):
                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.cursor_auth_info_updated')}...{Style.RESET_ALL}")
             else:
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.cursor_auth_info_update_failed')}...{Style.RESET_ALL}")
@@ -256,10 +256,10 @@ class CursorRegistration:
                 except:
                     pass
 
-    def update_cursor_auth(self, email=None, access_token=None, refresh_token=None):
+    def update_cursor_auth(self, email=None, access_token=None, refresh_token=None, auth_type="Auth_0"):
         """Convenient function to update Cursor authentication information"""
         auth_manager = CursorAuth(translator=self.translator)
-        return auth_manager.update_auth(email, access_token, refresh_token)
+        return auth_manager.update_auth(email, access_token, refresh_token, auth_type)
 
 def main(translator=None):
     """Main function to be called from main.py"""
