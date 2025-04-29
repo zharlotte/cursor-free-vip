@@ -101,6 +101,11 @@ class TempMailPlusTab(EmailTabInterface):
             if not data.get('result'):
                 return ""
                 
+            # 验证发件人邮箱是否包含cursor字符串
+            from_mail = data.get('from_mail', '')
+            if 'cursor' not in from_mail.lower():
+                return ""
+                
             # Extract verification code from text content using regex
             text = data.get('text', '')
             match = re.search(r'\n\n(\d{6})\n\n', text)
