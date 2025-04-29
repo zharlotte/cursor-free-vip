@@ -40,10 +40,10 @@ class TempMailPlusTab(EmailTabInterface):
         pass
             
     def check_for_cursor_email(self) -> bool:
-        """Check if there is a new email within the last 3 minutes
+        """Check if there is a new email
         
         Returns:
-            bool: True if new email within 3 minutes exists, False otherwise
+            bool: True if the first email in mail_list is new, False otherwise
         """
         try:
             params = {
@@ -60,18 +60,10 @@ class TempMailPlusTab(EmailTabInterface):
             
             data = response.json()
             if data.get('result') and data.get('mail_list'):
-                current_time = datetime.datetime.now()
-                for mail in data['mail_list']:
-                    if mail.get('is_new') == True:
-                        # 检查邮件时间是否在3分钟内
-                        try:
-                            mail_time = datetime.datetime.strptime(mail.get('time', ''), '%Y-%m-%d %H:%M:%S')
-                            time_diff = (current_time - mail_time).total_seconds() / 60  # 转换为分钟
-                            if time_diff <= 3:  # 3分钟内的邮件
-                                self._cached_mail_id = mail.get('mail_id')  # 缓存mail_id
-                                return True
-                        except ValueError:
-                            continue
+                # 检查邮件列表中的第一个邮件是否为新邮件
+                if data['mail_list'][0].get('is_new') == True:
+                    self._cached_mail_id = data['mail_list'][0].get('mail_id')  # 缓存mail_id
+                    return True
             return False
         except Exception as e:
             print(f"检查新邮件失败: {str(e)}")
