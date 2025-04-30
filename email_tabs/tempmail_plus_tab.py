@@ -7,15 +7,17 @@ from .email_tab_interface import EmailTabInterface
 class TempMailPlusTab(EmailTabInterface):
     """Implementation of EmailTabInterface for tempmail.plus"""
     
-    def __init__(self, email: str, epin: str):
+    def __init__(self, email: str, epin: str, translator=None):
         """Initialize TempMailPlusTab
         
         Args:
             email: The email address to check
             epin: The epin token for authentication
+            translator: Optional translator for internationalization
         """
         self.email = email
         self.epin = epin
+        self.translator = translator
         self.base_url = "https://tempmail.plus/api"
         self.headers = {
             'accept': 'application/json',
@@ -72,7 +74,7 @@ class TempMailPlusTab(EmailTabInterface):
                         return True
             return False
         except Exception as e:
-            print(f"检查新邮件失败: {str(e)}")
+            print(f"{self.translator.get('tempmail.check_email_failed', error=str(e)) if self.translator else f'Check email failed: {str(e)}'}")
             return False
     
     def _extract_verification_code(self) -> str:
@@ -114,7 +116,7 @@ class TempMailPlusTab(EmailTabInterface):
                 
             return ""
         except Exception as e:
-            print(f"提取验证码失败: {str(e)}")
+            print(f"{self.translator.get('tempmail.extract_code_failed', error=str(e)) if self.translator else f'Extract verification code failed: {str(e)}'}")
             return ""
             
     def get_verification_code(self) -> str:
@@ -129,35 +131,43 @@ if __name__ == "__main__":
     import os
     import time
     import sys
+    import configparser
     
     from config import get_config
     
-    config = get_config()
+    # 尝试导入 translator
+    try:
+        from main import Translator
+        translator = Translator()
+    except ImportError:
+        translator = None
+    
+    config = get_config(translator)
     
     try:
         email = config.get('TempMailPlus', 'email')
         epin = config.get('TempMailPlus', 'epin')
         
-        print(f"配置的邮箱: {email}")
+        print(f"{translator.get('tempmail.configured_email', email=email) if translator else f'Configured email: {email}'}")
         
-        # 初始化TempMailPlusTab
-        mail_tab = TempMailPlusTab(email, epin)
+        # 初始化TempMailPlusTab，传递 translator
+        mail_tab = TempMailPlusTab(email, epin, translator)
         
         # 检查是否有Cursor的邮件
-        print("正在检查Cursor验证邮件...")
+        print(f"{translator.get('tempmail.checking_email') if translator else 'Checking for Cursor verification email...'}")
         if mail_tab.check_for_cursor_email():
-            print("找到Cursor验证邮件")
+            print(f"{translator.get('tempmail.email_found') if translator else 'Found Cursor verification email'}")
             
             # 获取验证码
             verification_code = mail_tab.get_verification_code()
             if verification_code:
-                print(f"获取到的验证码: {verification_code}")
+                print(f"{translator.get('tempmail.verification_code', code=verification_code) if translator else f'Verification code: {verification_code}'}")
             else:
-                print("未能获取到验证码")
+                print(f"{translator.get('tempmail.no_code') if translator else 'Could not get verification code'}")
         else:
-            print("未找到Cursor验证邮件")
+            print(f"{translator.get('tempmail.no_email') if translator else 'No Cursor verification email found'}")
             
     except configparser.Error as e:
-        print(f"读取配置文件错误: {str(e)}")
+        print(f"{translator.get('tempmail.config_error', error=str(e)) if translator else f'Config file error: {str(e)}'}")
     except Exception as e:
-        print(f"发生错误: {str(e)}") 
+        print(f"{translator.get('tempmail.general_error', error=str(e)) if translator else f'An error occurred: {str(e)}'}") 
