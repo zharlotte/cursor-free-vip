@@ -1,6 +1,7 @@
 name: Build Executables
 
 on:
+  # 手动触发
   workflow_dispatch:
     inputs:
       use_env_version:
@@ -11,6 +12,20 @@ on:
         description: 'Version number (only used if not using .env version)'
         required: false
         default: ''
+  
+  # 推送到 main 分支或 tag 时自动触发
+  push:
+    branches: [ main, master ]
+    tags:
+      - 'v*'
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - 'LICENSE*'
+  
+  # 创建 release 时自动触发
+  release:
+    types: [published]
 
 permissions:
   contents: write
@@ -23,38 +38,60 @@ jobs:
     outputs:
       version: ${{ steps.set-version.outputs.version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
-      - name: Get version from .env file
+      - name: Get version from .env file (workflow_dispatch)
         id: env-version
-        if: ${{ github.event.inputs.use_env_version == 'yes' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.use_env_version == 'yes' }}
         run: |
-          VERSION=$(grep "^version=" .env | cut -d'=' -f2)
+          VERSION=$(grep "^VERSION=" .env | cut -d'=' -f2)
           echo "ENV_VERSION=$VERSION" >> $GITHUB_ENV
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Using version from .env file: $VERSION"
       
-      - name: Use manual version
+      - name: Use manual version (workflow_dispatch)
         id: manual-version
-        if: ${{ github.event.inputs.use_env_version != 'yes' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.use_env_version != 'yes' }}
         run: |
           echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
           echo "Using manually entered version: ${{ github.event.inputs.version }}"
       
+      - name: Get version from tag
+        id: tag-version
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$TAG_VERSION" >> $GITHUB_OUTPUT
+          echo "Using version from tag: $TAG_VERSION"
+      
+      - name: Get version from .env file (auto trigger)
+        id: auto-env-version
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+        run: |
+          VERSION=$(grep "^VERSION=" .env | cut -d'=' -f2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using version from .env file (auto): $VERSION"
+      
       - name: Set final version
         id: set-version
         run: |
-          if [ "${{ github.event.inputs.use_env_version }}" == "yes" ]; then
-            echo "version=${{ env.ENV_VERSION }}" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            if [ "${{ github.event.inputs.use_env_version }}" == "yes" ]; then
+              echo "version=${{ steps.env-version.outputs.version }}" >> $GITHUB_OUTPUT
+            else
+              echo "version=${{ steps.manual-version.outputs.version }}" >> $GITHUB_OUTPUT
+            fi
+          elif [ "${{ startsWith(github.ref, 'refs/tags/v') }}" == "true" ]; then
+            echo "version=${{ steps.tag-version.outputs.version }}" >> $GITHUB_OUTPUT
           else
-            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            echo "version=${{ steps.auto-env-version.outputs.version }}" >> $GITHUB_OUTPUT
           fi
 
   create-tag:
     needs: determine-version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # 获取所有标签
           
@@ -80,12 +117,12 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: '3.11'
     
     - name: Set version
       shell: bash
@@ -112,12 +149,12 @@ jobs:
     runs-on: macos-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: '3.11'
     
     - name: Set version
       shell: bash
@@ -145,12 +182,12 @@ jobs:
     runs-on: ubuntu-22.04
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: '3.11'
     
     - name: Set version
       shell: bash
@@ -182,10 +219,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: arm64
     
@@ -195,7 +232,7 @@ jobs:
     
     - name: Build in ARM64 Docker container
       run: |
-        docker run --rm --platform linux/arm64 -v ${{ github.workspace }}:/app -w /app arm64v8/python:3.10-slim bash -c "
+        docker run --rm --platform linux/arm64 -v ${{ github.workspace }}:/app -w /app arm64v8/python:3.11-slim bash -c "
           apt-get update && apt-get install -y build-essential
           pip install --upgrade pip
           pip install pyinstaller
@@ -217,12 +254,12 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: '3.11'
 
     - name: Set version
       shell: bash
@@ -254,7 +291,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       
       - name: Get version
         shell: bash
