@@ -372,3 +372,5 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# GitHub Actions workflow configured for multi-platform builds
