@@ -1,0 +1,71 @@
+{
+  "platforms": {
+    "windows": {
+      "architectures": ["x86_64"],
+      "file_extension": ".exe",
+      "build_requirements": ["pyinstaller", "pywin32"],
+      "build_script": "build.bat",
+      "docker_image": null,
+      "cross_compile": false
+    },
+    "linux": {
+      "architectures": ["x86_64", "arm64"],
+      "file_extension": "",
+      "build_requirements": ["pyinstaller"],
+      "build_script": "build.sh",
+      "docker_images": {
+        "x86_64": "python:3.10-slim",
+        "arm64": "arm64v8/python:3.10-slim"
+      },
+      "cross_compile": true
+    },
+    "darwin": {
+      "architectures": ["x86_64", "arm64"],
+      "file_extension": "",
+      "build_requirements": ["pyinstaller"],
+      "build_script": "build.mac.command",
+      "docker_image": null,
+      "cross_compile": false
+    }
+  },
+  "output": {
+    "naming_convention": "CursorFreeVIP_{version}_{platform}_{arch}",
+    "directory": "dist",
+    "compression": false,
+    "include_debug_symbols": false,
+    "calculate_checksums": true
+  },
+  "build": {
+    "clean_before_build": true,
+    "parallel_builds": true,
+    "max_parallel_jobs": 4,
+    "timeout_minutes": 30,
+    "retry_attempts": 2
+  },
+  "dependencies": {
+    "python_version": "3.10",
+    "pip_upgrade": true,
+    "cache_dependencies": true,
+    "virtual_env": true
+  },
+  "github_actions": {
+    "enabled": true,
+    "runners": {
+      "windows": "windows-latest",
+      "linux": "ubuntu-22.04",
+      "darwin": "macos-latest"
+    },
+    "artifact_retention_days": 90,
+    "create_release": true,
+    "draft_release": false
+  },
+  "testing": {
+    "enabled": false,
+    "test_executable": true,
+    "test_commands": [
+      "--version",
+      "--help"
+    ],
+    "smoke_tests": true
+  }
+}
